@@ -10,7 +10,7 @@ class WebSocketService {
     this.reconnectDelay = 1000;
   }
 
-  connect(url = process.env.REACT_APP_WS_URL || 'http://localhost:3001') {
+  connect(url = import.meta.env.VITE_WS_URL || 'http://localhost:3001') {
     try {
       this.socket = io(url, {
         transports: ['websocket', 'polling'],

@@ -69,8 +69,8 @@ cp .env.example .env
 
 Edit `.env` with your backend API URL:
 ```env
-REACT_APP_API_URL=http://localhost:3001/api
-REACT_APP_WS_URL=http://localhost:3001
+VITE_API_URL=http://localhost:3001/api
+VITE_WS_URL=http://localhost:3001
 ```
 
 3. Start development server:
@@ -142,9 +142,9 @@ The dashboard includes real-time updates for:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `REACT_APP_API_URL` | Backend API URL | `http://localhost:3001/api` |
-| `REACT_APP_WS_URL` | WebSocket URL | `http://localhost:3001` |
-| `REACT_APP_MAX_FILE_SIZE` | Max upload size | `10485760` (10MB) |
+| `VITE_API_URL` | Backend API URL | `http://localhost:3001/api` |
+| `VITE_WS_URL` | WebSocket URL | `http://localhost:3001` |
+| `VITE_MAX_FILE_SIZE` | Max upload size | `10485760` (10MB) |
 
 ### Theme Customization
 
