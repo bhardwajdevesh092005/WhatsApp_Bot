@@ -41,6 +41,7 @@ api.interceptors.response.use(
 
 export const apiService = {
   // Dashboard endpoints
+  getQrCode: () => api.get('/bot/qr'),
   getStats: () => api.get('/dashboard/stats'),
   getRecentMessages: () => api.get('/dashboard/recent-messages'),
 
@@ -48,7 +49,7 @@ export const apiService = {
   getMessages: (params) => api.get('/messages', { params }),
   sendMessage: (messageData) => api.post('/messages/send', messageData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   }),
   getMessage: (id) => api.get(`/messages/${id}`),

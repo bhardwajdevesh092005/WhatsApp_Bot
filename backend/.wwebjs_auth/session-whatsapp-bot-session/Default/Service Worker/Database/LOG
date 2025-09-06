@@ -1,3 +1,2 @@
-2025/09/06-11:01:59.553 2e254 Reusing MANIFEST /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Service Worker/Database/MANIFEST-000001
-2025/09/06-11:01:59.553 2e254 Recovering log #3
-2025/09/06-11:01:59.553 2e254 Reusing old log /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Service Worker/Database/000003.log 
+2025/09/06-13:08:51.406 3deea Creating DB /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Service Worker/Database since it was missing.
+2025/09/06-13:08:51.412 3deea Reusing MANIFEST /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Service Worker/Database/MANIFEST-000001

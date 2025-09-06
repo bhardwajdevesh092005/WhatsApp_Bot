@@ -451,15 +451,130 @@ export class WhatsAppService {
     }
   }
 
+  async getQRCode() {
+    try {
+      // Return the current QR code if available
+      if (this.qrCode && this.status === 'qr_code') {
+        return this.qrCode;
+      }
+      
+      // Try to get QR code from data service
+      try {
+        const qrData = await this.dataService.getData('qr_code');
+        if (qrData && qrData.qrCode) {
+            console.log('qrData', qrData.qrCode.data);
+          return qrData.qrCode.data;
+        }
+      } catch (error) {
+        console.log('ℹ️ No QR code found in data service');
+      }
+      
+      // No QR code available
+      return null;
+    } catch (error) {
+      console.error('❌ Error getting QR code:', error);
+      return null;
+    }
+  }
+
+  async getContacts() {
+    try {
+      if (!this.isReady) {
+        throw new Error('WhatsApp client is not ready');
+      }
+      
+      const contacts = await this.client.getContacts();
+      return contacts.map(contact => ({
+        id: contact.id._serialized,
+        name: contact.name || contact.pushname || 'Unknown',
+        number: contact.number,
+        isUser: contact.isUser,
+        isGroup: contact.isGroup,
+        profilePicUrl: contact.profilePicUrl
+      }));
+    } catch (error) {
+      console.error('❌ Error getting contacts:', error);
+      throw new Error(`Failed to get contacts: ${error.message}`);
+    }
+  }
+
+  async getChats() {
+    try {
+      if (!this.isReady) {
+        throw new Error('WhatsApp client is not ready');
+      }
+      
+      const chats = await this.client.getChats();
+      return chats.map(chat => ({
+        id: chat.id._serialized,
+        name: chat.name,
+        isGroup: chat.isGroup,
+        unreadCount: chat.unreadCount,
+        lastMessage: chat.lastMessage ? {
+          body: chat.lastMessage.body,
+          timestamp: chat.lastMessage.timestamp,
+          from: chat.lastMessage.from
+        } : null
+      }));
+    } catch (error) {
+      console.error('❌ Error getting chats:', error);
+      throw new Error(`Failed to get chats: ${error.message}`);
+    }
+  }
+
+  async logout() {
+    try {
+      console.log('🔐 Logging out from WhatsApp...');
+      
+      if (this.client) {
+        await this.client.logout();
+        await this.client.destroy();
+      }
+      
+      this.isReady = false;
+      this.status = 'logged_out';
+      this.clientInfo = null;
+      this.qrCode = null;
+      
+      this.emitStatusUpdate();
+      
+      return { success: true, message: 'Logged out successfully' };
+    } catch (error) {
+      console.error('❌ Logout failed:', error);
+      throw new Error(`Logout failed: ${error.message}`);
+    }
+  }
+
+  async restart() {
+    try {
+      console.log('🔄 Restarting WhatsApp service...');
+      
+      // Disconnect first
+      await this.disconnect();
+      
+      // Wait a moment
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Reinitialize
+      this.initializeClient();
+      await this.client.initialize();
+      
+      return { success: true, message: 'Restart initiated' };
+    } catch (error) {
+      console.error('❌ Restart failed:', error);
+      throw new Error(`Restart failed: ${error.message}`);
+    }
+  }
+
   async cleanup() {
     console.log('🧹 Cleaning up WhatsApp service...');
     
     try {
       if (this.client) {
         await this.client.destroy();
-      }
+      }                                                                                            
     } catch (error) {
       console.error('❌ Error during WhatsApp service cleanup:', error);
-    }
+                                                                                                                                                                                                                        }
   }
 }

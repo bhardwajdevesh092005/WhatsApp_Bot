@@ -367,14 +367,14 @@ const Settings = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={settings.workingHours.enabled}
+                        checked={settings?.workingHours?.enabled}
                         onChange={handleSettingChange('workingHours.enabled')}
                       />
                     }
                     label="Enable Working Hours"
                   />
                 </Grid>
-                {settings.workingHours.enabled && (
+                {settings?.workingHours?.enabled && (
                   <>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -422,20 +422,20 @@ const Settings = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={settings.notifications.email}
+                        checked={settings?.notifications?.email}
                         onChange={handleSettingChange('notifications.email')}
                       />
                     }
                     label="Email Notifications"
                   />
                 </Grid>
-                {settings.notifications.email && (
+                {settings?.notifications?.email && (
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
                       type="email"
                       label="Email Address"
-                      value={settings.notifications.emailAddress}
+                      value={settings?.notifications?.emailAddress}
                       onChange={handleSettingChange('notifications.emailAddress')}
                     />
                   </Grid>
@@ -444,7 +444,7 @@ const Settings = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={settings.notifications.webhook}
+                        checked={settings?.notifications?.webhook}
                         onChange={handleSettingChange('notifications.webhook')}
                       />
                     }
@@ -474,7 +474,7 @@ const Settings = () => {
                     </Button>
                   </Box>
                   <List dense>
-                    {settings.allowedContacts.map((contact, index) => (
+                    {settings?.allowedContacts?.map((contact, index) => (
                       <ListItem key={index}>
                         <ListItemText primary={contact} />
                         <ListItemSecondaryAction>

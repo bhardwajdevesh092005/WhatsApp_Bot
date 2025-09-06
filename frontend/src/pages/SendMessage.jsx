@@ -117,7 +117,7 @@ const SendMessage = () => {
       if (attachedFile) {
         messageData.append('attachment', attachedFile);
       }
-      
+      console.log(formData);
       const response = await apiService.sendMessage(messageData);
       
       if (response.data.success) {

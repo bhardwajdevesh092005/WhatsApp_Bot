@@ -52,7 +52,7 @@ const Messages = () => {
     setLoading(true);
     try {
       const response = await apiService.getMessages();
-      setMessages(response.data);
+      setMessages(response.data.data);
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
@@ -238,7 +238,7 @@ const Messages = () => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ maxWidth: 300 }}>
-                      {message.content.length > 100
+                      {message?.content?.length > 100
                         ? `${message.content.substring(0, 100)}...`
                         : message.content}
                     </Typography>

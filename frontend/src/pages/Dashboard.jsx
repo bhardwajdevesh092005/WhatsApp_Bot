@@ -26,10 +26,12 @@ const Dashboard = () => {
     botStatus: 'offline',
   });
 
+  const [qrCode, setQrCode] = useState(null);
   const [recentMessages, setRecentMessages] = useState([]);
 
   useEffect(() => {
     fetchDashboardData();
+    fetchQrCode();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -40,9 +42,21 @@ const Dashboard = () => {
 
       // Fetch recent messages
       const messagesResponse = await apiService.getRecentMessages();
-      setRecentMessages(messagesResponse.data);
+      setRecentMessages(messagesResponse.data.data);
+      console.log(messagesResponse.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+    }
+  };
+
+  const fetchQrCode = async () => {
+    try {
+      const qrResponse = await apiService.getQrCode();
+      console.log(qrResponse.data.data);
+      setQrCode(qrResponse.data.data)// Assuming the QR code data is in data field
+      
+    } catch (error) {
+      console.error('Error fetching QR code:', error);
     }
   };
 
@@ -175,6 +189,7 @@ const Dashboard = () => {
           </Box>
         )}
       </Paper>
+      <img src={`${qrCode}`} alt="QR Image  " />
     </Box>
   );
 };

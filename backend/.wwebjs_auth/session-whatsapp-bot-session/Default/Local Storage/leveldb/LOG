@@ -1,3 +1,2 @@
-2025/09/06-11:01:59.536 2e254 Reusing MANIFEST /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Local Storage/leveldb/MANIFEST-000001
-2025/09/06-11:01:59.536 2e254 Recovering log #3
-2025/09/06-11:01:59.536 2e254 Reusing old log /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Local Storage/leveldb/000003.log 
+2025/09/06-13:08:33.351 3dead Creating DB /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Local Storage/leveldb since it was missing.
+2025/09/06-13:08:33.355 3dead Reusing MANIFEST /home/devesh-bhardwaj/Desktop/Assignment/WhatsApp_Bot/backend/.wwebjs_auth/session-whatsapp-bot-session/Default/Local Storage/leveldb/MANIFEST-000001

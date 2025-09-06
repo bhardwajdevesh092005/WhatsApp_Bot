@@ -168,7 +168,7 @@ export class SocketService {
   addToRoom(socketId, room) {
     const client = this.connectedClients.get(socketId);
     if (client) {
-      client.rooms.add(room);
+      client.rooms.add(room)    ;
       this.rooms.add(room);
     }
   }
