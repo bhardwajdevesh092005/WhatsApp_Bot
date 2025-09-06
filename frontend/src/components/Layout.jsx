@@ -17,6 +17,7 @@ import {
   Settings,
   Analytics,
   Send,
+  Psychology,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -32,6 +33,7 @@ const Layout = ({ children }) => {
     { text: 'Send Message', icon: <Send />, path: '/send' },
     { text: 'Analytics', icon: <Analytics />, path: '/analytics' },
     { text: 'Settings', icon: <Settings />, path: '/settings' },
+    { text: 'LLM Settings', icon: <Psychology />, path: '/llm-settings' },
   ];
 
   return (

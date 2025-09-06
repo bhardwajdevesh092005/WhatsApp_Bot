@@ -13,7 +13,7 @@ export class LLMController {
       });
       
     } catch (error) {
-      console.error('💥 Error getting LLM settings:', error);
+      console.error('Error getting LLM settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get LLM settings',
@@ -54,7 +54,7 @@ export class LLMController {
       });
       
     } catch (error) {
-      console.error('💥 Error updating LLM settings:', error);
+      console.error('Error updating LLM settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to update LLM settings',
@@ -81,7 +81,7 @@ export class LLMController {
       });
       
     } catch (error) {
-      console.error('💥 Error getting LLM status:', error);
+      console.error("Error getting LLM status:', error");
       res.status(500).json({
         success: false,
         error: 'Failed to get LLM status',

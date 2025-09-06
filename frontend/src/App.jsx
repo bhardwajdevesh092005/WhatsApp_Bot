@@ -12,6 +12,7 @@ import Messages from './pages/Messages';
 import SendMessage from './pages/SendMessage';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import LLMSettings from './pages/LLMSettings';
 
 // Services
 import webSocketService from './services/websocket';
@@ -65,6 +66,7 @@ function App() {
             <Route path="/send" element={<SendMessage />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/llm-settings" element={<LLMSettings />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>

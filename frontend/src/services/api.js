@@ -74,6 +74,15 @@ export const apiService = {
   updateSettings: (settings) => api.put('/settings', settings),
   resetSettings: () => api.post('/settings/reset'),
 
+  // LLM endpoints
+  getLLMSettings: () => api.get('/llm/settings'),
+  updateLLMSettings: (settings) => api.put('/llm/settings', settings),
+  getLLMStatus: () => api.get('/llm/status'),
+  testLLMResponse: (data) => api.post('/llm/test', data),
+  getLLMProviders: () => api.get('/llm/providers'),
+  resetLLMSettings: () => api.post('/llm/reset'),
+  getLLMAnalytics: (days = 30) => api.get('/llm/analytics', { params: { days } }),
+
   // Device/Bot endpoints
   getDeviceStatus: () => api.get('/bot/status'),
   reconnectDevice: () => api.post('/bot/reconnect'),
