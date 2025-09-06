@@ -12,9 +12,9 @@ export class DashboardController {
       
       // Calculate basic stats
       const totalMessages = messages.total;
-      const sentMessages = messages.messages.filter(m => m.direction === 'outgoing').length;
-      const receivedMessages = messages.messages.filter(m => m.direction === 'incoming').length;
-      const failedMessages = messages.messages.filter(m => m.status === 'failed').length;
+      const sentMessages = messages.filter(m => m.direction === 'outgoing').length;
+      const receivedMessages = messages.filter(m => m.direction === 'incoming').length;
+      const failedMessages = messages.filter(m => m.status === 'failed').length;
       
       // Calculate today's stats
       const today = new Date().toISOString().split('T')[0];
