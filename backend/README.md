@@ -187,27 +187,6 @@ npm run migrate        # Migrate data to MongoDB
 npm run migrate:backup # Backup existing JSON files
 npm run migrate:validate # Validate migration
 npm run migrate:full   # Complete migration process
-```
-
-### Environment Variables
-
-Key environment variables (see `.env.example`):
-
-```bash
-# Server
-PORT=3001
-NODE_ENV=development
-
-# MongoDB (optional)
-MONGODB_URI=mongodb://localhost:27017/whatsapp_bot
-
-# WhatsApp
-WHATSAPP_SESSION_NAME=whatsapp-bot-session
-WHATSAPP_HEADLESS=true
-
-# Frontend
-FRONTEND_URL=http://localhost:5173
-```
 
 ## 🧪 Testing
 

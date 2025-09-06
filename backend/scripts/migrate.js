@@ -58,7 +58,7 @@ class MigrationRunner {
       console.error('\n Migration failed:', error);
       throw error;
     } finally {
-      await databaseService.disconnect();
+    //   await databaseService.disconnect();
     }
   }
 
@@ -183,6 +183,8 @@ const main = async () => {
   } catch (error) {
     console.error('\n💥 Migration script failed:', error.message);
     process.exit(1);
+  } finally{
+    databaseService.disconnect();
   }
 };
 

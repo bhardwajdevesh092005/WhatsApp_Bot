@@ -1,0 +1,23 @@
+{
+  "botName": "WhatsApp Bot",
+  "autoReply": false,
+  "autoReplyMessage": "Thanks for your message! We will get back to you soon.",
+  "webhookUrl": "",
+  "maxRetries": 3,
+  "retryDelay": 5000,
+  "enableLogging": true,
+  "logLevel": "info",
+  "allowedContacts": [],
+  "blockedContacts": [],
+  "workingHours": {
+    "enabled": false,
+    "start": "09:00",
+    "end": "17:00",
+    "timezone": "UTC"
+  },
+  "notifications": {
+    "email": false,
+    "webhook": false,
+    "emailAddress": ""
+  }
+}

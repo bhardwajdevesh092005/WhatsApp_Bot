@@ -4,6 +4,7 @@ import qrcode from 'qrcode';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
+import { LLMService } from './llmService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +14,7 @@ export class WhatsAppService {
     this.client = null;
     this.socketService = socketService;
     this.dataService = dataService;
+    this.llmService = new LLMService();
     this.isReady = false;
     this.qrCode = null;
     this.clientInfo = null;
@@ -20,8 +22,31 @@ export class WhatsAppService {
     this.retryCount = 0;
     this.maxRetries = 3;
     
-    // Initialize client
+    // Initialize services
     this.initializeClient();
+    // Delay LLM initialization to allow data service to be ready
+    setTimeout(() => this.initializeLLMService(), 2000);
+  }
+
+  async initializeLLMService() {
+    try {
+      // Wait a bit for data service to be fully ready
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const settings = await this.dataService.getSettings();
+      const llmSettings = settings.llm || {};
+      
+      await this.llmService.initialize(llmSettings);
+      console.log('🤖 LLM Service initialized for WhatsApp auto-reply');
+    } catch (error) {
+      console.error('🤖 Failed to initialize LLM Service:', error.message);
+      // Initialize with default settings if data service fails
+      await this.llmService.initialize({
+        enabled: false,
+        provider: 'openai',
+        model: 'gpt-3.5-turbo'
+      });
+    }
   }
 
   initializeClient() {
@@ -292,9 +317,7 @@ export class WhatsAppService {
     }
     
     // Check working hours
-    if (settings.workingHours?.enabled && !this.isWithinWorkingHours(settings.workingHours)) {
-      return;
-    }
+    const isWorkingHours = !settings.workingHours?.enabled || this.isWithinWorkingHours(settings.workingHours);
     
     // Check if contact is allowed
     if (settings.allowedContacts?.length > 0 && !settings.allowedContacts.includes(messageData.sender)) {
@@ -305,14 +328,102 @@ export class WhatsAppService {
     if (settings.blockedContacts?.includes(messageData.sender)) {
       return;
     }
-    
+
     try {
-      await this.sendMessage(
-        messageData.sender,
-        settings.autoReplyMessage || 'Thanks for your message! We will get back to you soon.'
-      );
+      let replyMessage = '';
+      let responseType = 'default';
+      
+      // Check if LLM auto-reply is enabled
+      const llmSettings = settings.llm || {};
+      if (llmSettings.enabled && llmSettings.autoReply) {
+        console.log('Generating LLM auto-reply for:', messageData.sender);
+        
+        const context = {
+          sender: messageData.sender,
+          senderName: messageData.senderName,
+          isGroup: message.isGroupMsg,
+          businessHours: isWorkingHours,
+          messageContent: messageData.content
+        };
+        
+        const llmResponse = await this.llmService.generateResponse(messageData.content, context);
+        
+        if (llmResponse) {
+          replyMessage = llmResponse;
+          responseType = 'llm';
+          console.log('LLM auto-reply generated successfully');
+        } else {
+          // Fallback to default message
+          replyMessage = this.getDefaultAutoReplyMessage(settings, isWorkingHours);
+          responseType = isWorkingHours ? 'default' : 'afterHours';
+        }
+      } else {
+        // Use traditional auto-reply
+        replyMessage = this.getDefaultAutoReplyMessage(settings, isWorkingHours);
+        responseType = isWorkingHours ? 'default' : 'afterHours';
+      }
+      
+      // Send the reply
+      await this.sendMessage(messageData.sender, replyMessage);
+      
+      // Track analytics
+      await this.trackAutoReply({
+        sender: messageData.sender,
+        senderName: messageData.senderName,
+        message: messageData.content,
+        response: replyMessage,
+        responseType: responseType,
+        timestamp: new Date().toISOString(),
+        isGroup: message.isGroupMsg,
+        isWorkingHours: isWorkingHours
+      });
+      
+      console.log(` Auto-reply sent (${responseType}):`, messageData.sender);
+      
     } catch (error) {
       console.error(' Error sending auto-reply:', error);
+      
+      // Send fallback message on error
+      try {
+        await this.sendMessage(
+          messageData.sender,
+          'I apologize, but I cannot process your message right now. Please try again later.'
+        );
+      } catch (fallbackError) {
+        console.error('Error sending fallback auto-reply:', fallbackError);
+      }
+    }
+  }
+
+  getDefaultAutoReplyMessage(settings, isWorkingHours) {
+    if (!isWorkingHours && settings.afterHoursMessage) {
+      return settings.afterHoursMessage;
+    }
+    return settings.autoReplyMessage || 'Thanks for your message! We will get back to you soon.';
+  }
+
+  async trackAutoReply(replyData) {
+    try {
+      // Save to analytics
+      if (this.dataService.saveAutoReply) {
+        await this.dataService.saveAutoReply(replyData);
+      }
+      
+      // Update analytics counters
+      if (this.dataService.updateAnalytics) {
+        const analytics = await this.dataService.getAnalytics() || {};
+        analytics.autoReplies = analytics.autoReplies || [];
+        analytics.autoReplies.push(replyData);
+        
+        // Keep only last 1000 entries to prevent unlimited growth
+        if (analytics.autoReplies.length > 1000) {
+          analytics.autoReplies = analytics.autoReplies.slice(-1000);
+        }
+        
+        await this.dataService.updateAnalytics(analytics);
+      }
+    } catch (error) {
+      console.error('Error tracking auto-reply analytics:', error);
     }
   }
 
@@ -563,6 +674,48 @@ export class WhatsAppService {
     } catch (error) {
       console.error(' Restart failed:', error);
       throw new Error(`Restart failed: ${error.message}`);
+    }
+  }
+
+  // LLM Service methods
+  async updateLLMSettings(newSettings) {
+    try {
+      const result = await this.llmService.updateSettings(newSettings);
+      console.log('🤖 LLM settings updated:', newSettings);
+      return result;
+    } catch (error) {
+      console.error('🤖 Error updating LLM settings:', error);
+      throw error;
+    }
+  }
+
+  getLLMSettings() {
+    return this.llmService.getSettings();
+  }
+
+  getLLMStatus() {
+    return this.llmService.getStatus();
+  }
+
+  async getLLMHealth() {
+    return await this.llmService.getHealth();
+  }
+
+  async testLLMResponse(message, context = {}) {
+    try {
+      const response = await this.llmService.generateResponse(message, context);
+      return {
+        success: true,
+        response: response,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('🤖 Error testing LLM response:', error);
+      return {
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      };
     }
   }
 

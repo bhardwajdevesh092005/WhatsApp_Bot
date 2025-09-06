@@ -15,6 +15,7 @@ import analyticsRoutes from './src/routes/analytics.js';
 import settingsRoutes from './src/routes/settings.js';
 import botRoutes from './src/routes/bot.js';
 import healthRoutes from './src/routes/health.js';
+import llmRoutes from './src/routes/llm.js';
 
 // Import services
 import { WhatsAppService } from './src/services/whatsapp.js';
@@ -151,6 +152,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/bot', botRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/llm', llmRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

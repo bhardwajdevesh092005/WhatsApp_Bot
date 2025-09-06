@@ -169,6 +169,7 @@ export class DataService {
       botName: 'WhatsApp Bot',
       autoReply: false,
       autoReplyMessage: 'Thanks for your message! We will get back to you soon.',
+      afterHoursMessage: 'Thank you for your message. We are currently outside business hours. We will respond as soon as possible during our working hours.',
       webhookUrl: '',
       maxRetries: 3,
       retryDelay: 5000,
@@ -186,6 +187,25 @@ export class DataService {
         email: false,
         webhook: false,
         emailAddress: ''
+      },
+      llm: {
+        enabled: true,
+        autoReply: false,
+        provider: 'openai',
+        model: 'gpt-3.5-turbo',
+        apiKey: '',
+        baseURL: 'https://api.openai.com/v1',
+        customEndpoint: '',
+        maxTokens: 150,
+        temperature: 0.7,
+        systemPrompt: 'You are a helpful WhatsApp bot assistant. Respond naturally and helpfully to user messages. Keep responses concise and friendly.',
+        fallbackMessage: 'I apologize, but I cannot process your message right now. Please try again later.',
+        rateLimitPerHour: 60,
+        timeout: 10000,
+        headers: {},
+        onlyDuringBusinessHours: false,
+        smartResponseMode: true,
+        contextAware: true
       }
     };
   }

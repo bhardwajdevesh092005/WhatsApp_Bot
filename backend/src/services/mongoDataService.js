@@ -120,7 +120,6 @@ class MongoDataService {
     }
   }
 
-  // Contact operations
   async saveContact(contactData) {
     try {
       const contact = await Contact.findOneAndUpdate(
@@ -194,8 +193,6 @@ class MongoDataService {
     try {
       const query = category ? { category } : {};
       const settings = await Settings.find(query).lean();
-      
-      // Convert to key-value object for backward compatibility
       const settingsObj = {};
       settings.forEach(setting => {
         settingsObj[setting.key] = setting.value;
@@ -204,6 +201,28 @@ class MongoDataService {
       return settingsObj;
     } catch (error) {
       console.error(' Error loading settings:', error);
+      throw error;
+    }
+  }
+
+  // Alias for loadSettings to maintain compatibility
+  async getSettings(category = null) {
+    return await this.loadSettings(category);
+  }
+
+  // Update settings method
+  async updateSettings(newSettings) {
+    try {
+      const updatePromises = [];
+      for (const [key, value] of Object.entries(newSettings)) {
+        updatePromises.push(this.saveSetting(key, value));
+      }
+      await Promise.all(updatePromises);
+      
+      // Return the updated settings
+      return await this.getSettings();
+    } catch (error) {
+      console.error(' Error updating settings:', error);
       throw error;
     }
   }
@@ -217,7 +236,6 @@ class MongoDataService {
       return defaultValue;
     }
   }
-
   async deleteSetting(key) {
     try {
       const result = await Settings.deleteOne({ key });
@@ -227,8 +245,6 @@ class MongoDataService {
       throw error;
     }
   }
-
-  // Analytics operations
   async saveAnalytics(type, data, date = new Date()) {
     try {
       const analytics = new Analytics({
@@ -247,7 +263,6 @@ class MongoDataService {
       throw error;
     }
   }
-
   async loadAnalytics(type = null, dateFrom = null, dateTo = null, limit = 100) {
     try {
       const query = {};
@@ -296,7 +311,41 @@ class MongoDataService {
     }
   }
 
-  // Session data operations
+  // Alias for compatibility
+  async getAnalytics() {
+    try {
+      const analytics = await Analytics.find().sort({ date: -1 }).limit(1000).lean();
+      return {
+        autoReplies: analytics.filter(a => a.type === 'auto_reply').map(a => a.data),
+        messages: analytics.filter(a => a.type === 'message').map(a => a.data),
+        general: analytics.filter(a => !['auto_reply', 'message'].includes(a.type))
+      };
+    } catch (error) {
+      console.error(' Error getting analytics:', error);
+      return { autoReplies: [], messages: [], general: [] };
+    }
+  }
+
+  // Update analytics method for compatibility
+  async updateAnalytics(analyticsData) {
+    try {
+      // Handle different analytics data structures
+      if (analyticsData.autoReplies) {
+        for (const reply of analyticsData.autoReplies) {
+          await this.saveAutoReply(reply);
+        }
+      }
+      if (analyticsData.messages) {
+        for (const message of analyticsData.messages) {
+          await this.saveAnalytics('message', message);
+        }
+      }
+      return analyticsData;
+    } catch (error) {
+      console.error(' Error updating analytics:', error);
+      throw error;
+    }
+  }
   async saveSessionData(key, data, expiresAt = null) {
     try {
       const sessionData = await SessionData.findOneAndUpdate(
@@ -422,7 +471,6 @@ class MongoDataService {
       } catch (error) {
         console.log('No analytics.json found or error reading it');
       }
-
       console.log('Migration completed successfully');
     } catch (error) {
       console.error(' Error during migration:', error);

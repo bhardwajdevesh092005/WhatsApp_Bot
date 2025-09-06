@@ -12,6 +12,7 @@ export class HealthController {
       const socketConnections = socketService ? socketService.getConnectionCount() : 0;
       const dataServiceHealth = dataService ? await dataService.healthCheck?.() || await dataService.getHealth?.() : { status: 'Not initialized' };
       const databaseHealth = databaseService ? await databaseService.healthCheck() : { status: 'Not connected' };
+      const llmHealth = whatsappService ? await whatsappService.getLLMHealth() : { status: 'Not initialized' };
       
       const health = {
         status: 'healthy',
@@ -39,6 +40,12 @@ export class HealthController {
             connected: databaseHealth.status === 'connected',
             database: databaseHealth.database || 'N/A',
             collections: databaseHealth.collections || []
+          },
+          llm: {
+            status: llmHealth.status,
+            provider: llmHealth.provider || 'Not configured',
+            model: llmHealth.model || 'Not configured',
+            enabled: llmHealth.status !== 'disabled'
           }
         },
         environment: {
