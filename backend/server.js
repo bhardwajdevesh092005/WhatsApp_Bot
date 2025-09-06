@@ -20,6 +20,8 @@ import healthRoutes from './src/routes/health.js';
 import { WhatsAppService } from './src/services/whatsapp.js';
 import { SocketService } from './src/services/socket.js';
 import { DataService } from './src/services/data.js';
+import MongoDataService from './src/services/mongoDataService.js';
+import databaseService from './src/config/database.js';
 
 // Import middleware
 import { errorHandler } from './src/middleware/errorHandler.js';
@@ -82,9 +84,21 @@ const initializeServices = async () => {
   try {
     console.log('🔄 Initializing services...');
     
-    // Initialize data service
-    dataService = new DataService();
-    await dataService.initialize();
+    // Connect to MongoDB first
+    await databaseService.connect();
+    
+    // Initialize data service (MongoDB or fallback to file-based)
+    const useMongoDb = process.env.MONGODB_URI || process.env.USE_MONGODB === 'true';
+    
+    if (useMongoDb) {
+      console.log('📊 Using MongoDB for data storage...');
+      dataService = new MongoDataService();
+      await dataService.initialize();
+    } else {
+      console.log('📁 Using file-based data storage...');
+      dataService = new DataService();
+      await dataService.initialize();
+    }
     
     // Initialize socket service
     socketService = new SocketService(io);
@@ -99,10 +113,34 @@ const initializeServices = async () => {
     app.locals.whatsappService = whatsappService;
     app.locals.socketService = socketService;
     app.locals.dataService = dataService;
+    app.locals.databaseService = databaseService;
     
   } catch (error) {
     console.error('❌ Failed to initialize services:', error);
-    process.exit(1);
+    
+    // Fallback to file-based storage if MongoDB fails
+    if (error.message.includes('MongoDB')) {
+      console.log('⚠️  MongoDB connection failed, falling back to file-based storage...');
+      try {
+        dataService = new DataService();
+        await dataService.initialize();
+        
+        socketService = new SocketService(io);
+        whatsappService = new WhatsAppService(socketService, dataService);
+        await whatsappService.initialize();
+        
+        app.locals.whatsappService = whatsappService;
+        app.locals.socketService = socketService;
+        app.locals.dataService = dataService;
+        
+        console.log('✅ Services initialized with file-based storage');
+      } catch (fallbackError) {
+        console.error('❌ Failed to initialize even with fallback:', fallbackError);
+        process.exit(1);
+      }
+    } else {
+      process.exit(1);
+    }
   }
 };
 
@@ -193,8 +231,13 @@ const gracefulShutdown = async (signal) => {
     }
     
     if (dataService) {
-      await dataService.cleanup();
+      await dataService.cleanup?.();
       console.log('🔄 Data service cleaned up');
+    }
+    
+    if (databaseService) {
+      await databaseService.disconnect();
+      console.log('🔄 Database connection closed');
     }
     
     console.log('✅ Graceful shutdown completed');
