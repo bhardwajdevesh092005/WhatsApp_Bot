@@ -1,14 +1,16 @@
 import OpenAI from 'openai';
 import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class LLMService {
   constructor() {
     this.openai = null;
+    this.gemini = null;
     this.isInitialized = false;
     this.settings = {
-      provider: 'openai', // 'openai', 'ollama', 'custom'
-      model: 'gpt-3.5-turbo',
-      apiKey: process.env.OPENAI_API_KEY || '',
+      provider: 'gemini', // 'openai', 'gemini', 'ollama', 'custom'
+      model: 'gemini-pro',
+      apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
       baseURL: process.env.LLM_BASE_URL || 'https://api.openai.com/v1',
       maxTokens: 150,
       temperature: 0.7,
@@ -45,6 +47,16 @@ export class LLMService {
         
         // Test the connection
         await this.testConnection();
+      } else if (this.settings.provider === 'gemini') {
+        if (!this.settings.apiKey) {
+          console.warn('🤖 LLM Service: Gemini API key not provided');
+          return false;
+        }
+        
+        this.gemini = new GoogleGenerativeAI(this.settings.apiKey);
+        
+        // Test the connection
+        await this.testConnection();
       }
       
       this.isInitialized = true;
@@ -66,6 +78,11 @@ export class LLMService {
           max_tokens: 5
         });
         return !!response.choices[0]?.message?.content;
+      } else if (this.settings.provider === 'gemini' && this.gemini) {
+        const model = this.gemini.getGenerativeModel({ model: this.settings.model });
+        const result = await model.generateContent('Hello');
+        const response = await result.response;
+        return !!response.text();
       }
       return true;
     } catch (error) {
@@ -93,6 +110,9 @@ export class LLMService {
       switch (this.settings.provider) {
         case 'openai':
           response = await this.generateOpenAIResponse(userMessage, context);
+          break;
+        case 'gemini':
+          response = await this.generateGeminiResponse(userMessage, context);
           break;
         case 'ollama':
           response = await this.generateOllamaResponse(userMessage, context);
@@ -144,6 +164,38 @@ export class LLMService {
     ]);
 
     return response.choices[0]?.message?.content?.trim() || this.settings.fallbackMessage;
+  }
+
+  async generateGeminiResponse(userMessage, context = {}) {
+    if (!this.gemini) {
+      throw new Error('Gemini client not initialized');
+    }
+
+    try {
+      const model = this.gemini.getGenerativeModel({ 
+        model: this.settings.model || 'gemini-pro',
+        generationConfig: {
+          maxOutputTokens: this.settings.maxTokens,
+          temperature: this.settings.temperature,
+        }
+      });
+
+      // Build the prompt with system context
+      const prompt = `${this.buildSystemPrompt(context)}\n\nUser: ${userMessage}\n\nAssistant:`;
+
+      const result = await Promise.race([
+        model.generateContent(prompt),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), this.settings.timeout)
+        )
+      ]);
+
+      const response = await result.response;
+      return response.text()?.trim() || this.settings.fallbackMessage;
+    } catch (error) {
+      console.error('🤖 Gemini API Error:', error.message);
+      throw error;
+    }
   }
 
   async generateOllamaResponse(userMessage, context = {}) {

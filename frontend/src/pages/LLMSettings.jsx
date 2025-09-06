@@ -55,8 +55,8 @@ const LLMSettings = () => {
   const [settings, setSettings] = useState({
     enabled: false,
     autoReply: false,
-    provider: 'openai',
-    model: 'gpt-3.5-turbo',
+    provider: 'gemini',
+    model: 'gemini-pro',
     apiKey: '',
     baseURL: 'https://api.openai.com/v1',
     customEndpoint: '',

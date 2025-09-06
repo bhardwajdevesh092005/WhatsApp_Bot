@@ -29,11 +29,14 @@ export class LLMController {
       const newSettings = req.body;
       
       // Validate required fields for enabled LLM
-      if (newSettings.enabled && newSettings.provider === 'openai' && !newSettings.apiKey) {
-        return res.status(400).json({
-          success: false,
-          error: 'API key is required when LLM is enabled with OpenAI provider'
-        });
+      if (newSettings.enabled) {
+        if ((newSettings.provider === 'openai' && !newSettings.apiKey) ||
+            (newSettings.provider === 'gemini' && !newSettings.apiKey)) {
+          return res.status(400).json({
+            success: false,
+            error: `API key is required when LLM is enabled with ${newSettings.provider} provider`
+          });
+        }
       }
       
       // Update LLM service settings
@@ -132,6 +135,15 @@ export class LLMController {
     try {
       const providers = [
         {
+          id: 'gemini',
+          name: 'Google Gemini',
+          description: 'Google Gemini AI models (Free with API key)',
+          models: ['gemini-pro', 'gemini-pro-vision'],
+          requiresApiKey: true,
+          baseURL: 'https://generativelanguage.googleapis.com/v1beta',
+          documentation: 'https://ai.google.dev/docs'
+        },
+        {
           id: 'openai',
           name: 'OpenAI',
           description: 'OpenAI GPT models (GPT-3.5, GPT-4)',
@@ -183,12 +195,12 @@ export class LLMController {
       const { whatsappService, dataService } = req.app.locals;
       
       const defaultLLMSettings = {
-        enabled: false,
-        autoReply: false,
-        provider: 'openai',
-        model: 'gpt-3.5-turbo',
+        enabled: true,
+        autoReply: true,
+        provider: 'gemini',
+        model: 'gemini-pro',
         apiKey: '',
-        baseURL: 'https://api.openai.com/v1',
+        baseURL: 'https://generativelanguage.googleapis.com/v1beta',
         customEndpoint: '',
         maxTokens: 150,
         temperature: 0.7,
