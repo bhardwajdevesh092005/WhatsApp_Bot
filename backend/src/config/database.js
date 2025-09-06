@@ -21,7 +21,7 @@ class DatabaseService {
       const options = {
         // Buffering settings
         bufferCommands: false,
-        maxBufferTime: 30000,
+        // maxBufferTime: 30000,
         
         // Connection pool settings
         maxPoolSize: 10,
@@ -42,19 +42,19 @@ class DatabaseService {
       };
 
       // Connect to MongoDB
-      console.log('🔌 Connecting to MongoDB...');
+      console.log(' Connecting to MongoDB...');
       this.connection = await mongoose.connect(mongoUri, options);
       this.isConnected = true;
 
-      console.log(`✅ MongoDB connected successfully to: ${this.connection.connection.name}`);
-      console.log(`📊 Connection state: ${mongoose.connection.readyState}`);
+      console.log(`MongoDB connected successfully to: ${this.connection.connection.name}`);
+      console.log(`Connection state: ${mongoose.connection.readyState}`);
 
       // Handle connection events
       this.setupEventListeners();
 
       return this.connection;
     } catch (error) {
-      console.error('❌ MongoDB connection error:', error.message);
+      console.error(' MongoDB connection error:', error.message);
       this.isConnected = false;
       throw new Error(`Failed to connect to MongoDB: ${error.message}`);
     }
@@ -63,12 +63,12 @@ class DatabaseService {
   setupEventListeners() {
     // Connection events
     mongoose.connection.on('connected', () => {
-      console.log('📡 Mongoose connected to MongoDB');
+      console.log(' Mongoose connected to MongoDB');
       this.isConnected = true;
     });
 
     mongoose.connection.on('error', (error) => {
-      console.error('❌ MongoDB connection error:', error);
+      console.error(' MongoDB connection error:', error);
       this.isConnected = false;
     });
 
@@ -98,7 +98,7 @@ class DatabaseService {
         this.connection = null;
       }
     } catch (error) {
-      console.error('❌ Error disconnecting from MongoDB:', error);
+      console.error(' Error disconnecting from MongoDB:', error);
     }
   }
 
@@ -144,21 +144,21 @@ class DatabaseService {
       await mongoose.connection.dropDatabase();
       console.log('🗑️  Database dropped successfully');
     } catch (error) {
-      console.error('❌ Error dropping database:', error);
+      console.error(' Error dropping database:', error);
       throw error;
     }
   }
 
   async createIndexes() {
     try {
-      console.log('📝 Creating database indexes...');
+      console.log(' Creating database indexes...');
       
       // This will create all indexes defined in the schemas
       await mongoose.connection.syncIndexes();
       
-      console.log('✅ Database indexes created successfully');
+      console.log('Database indexes created successfully');
     } catch (error) {
-      console.error('❌ Error creating indexes:', error);
+      console.error(' Error creating indexes:', error);
       throw error;
     }
   }

@@ -18,7 +18,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting analytics overview:', error);
+      console.error(' Error getting analytics overview:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get analytics overview',
@@ -47,7 +47,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting message volume:', error);
+      console.error(' Error getting message volume:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get message volume data',
@@ -74,7 +74,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting response times:', error);
+      console.error(' Error getting response times:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get response time data',
@@ -127,7 +127,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting popular contacts:', error);
+      console.error(' Error getting popular contacts:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get popular contacts data',
@@ -173,7 +173,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting message types:', error);
+      console.error(' Error getting message types:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get message types data',
@@ -246,7 +246,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting activity patterns:', error);
+      console.error(' Error getting activity patterns:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get activity patterns data',
@@ -300,7 +300,7 @@ export class AnalyticsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting success rates:', error);
+      console.error(' Error getting success rates:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get success rates data',
@@ -351,7 +351,7 @@ export class AnalyticsController {
       }
       
     } catch (error) {
-      console.error('❌ Error exporting analytics:', error);
+      console.error(' Error exporting analytics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to export analytics data',

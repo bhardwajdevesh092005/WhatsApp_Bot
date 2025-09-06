@@ -15,7 +15,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting bot status:', error);
+      console.error(' Error getting bot status:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get bot status',
@@ -50,7 +50,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error connecting bot:', error);
+      console.error(' Error connecting bot:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to connect bot',
@@ -80,7 +80,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error disconnecting bot:', error);
+      console.error(' Error disconnecting bot:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to disconnect bot',
@@ -116,7 +116,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error restarting bot:', error);
+      console.error(' Error restarting bot:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to restart bot',
@@ -146,7 +146,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting QR code:', error);
+      console.error(' Error getting QR code:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get QR code',
@@ -168,7 +168,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting client info:', error);
+      console.error(' Error getting client info:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get client info',
@@ -196,7 +196,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting contacts:', error);
+      console.error(' Error getting contacts:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get contacts',
@@ -222,7 +222,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting chats:', error);
+      console.error(' Error getting chats:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get chats',
@@ -251,7 +251,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error logging out bot:', error);
+      console.error(' Error logging out bot:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to logout bot',
@@ -287,7 +287,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting bot health:', error);
+      console.error(' Error getting bot health:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get bot health',
@@ -327,7 +327,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error updating auto-reply settings:', error);
+      console.error(' Error updating auto-reply settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to update auto-reply settings',
@@ -374,7 +374,7 @@ export class BotController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting bot logs:', error);
+      console.error(' Error getting bot logs:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get bot logs',
@@ -447,7 +447,7 @@ export class BotController {
       }
       
     } catch (error) {
-      console.error('❌ Error testing webhook:', error);
+      console.error(' Error testing webhook:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to test webhook',

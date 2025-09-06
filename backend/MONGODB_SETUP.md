@@ -50,7 +50,7 @@ The bot now supports both storage methods:
 4. Whitelist your IP address
 5. Get connection string
 
-## ⚙️ Configuration
+##  Configuration
 
 ### 1. Environment Variables
 
@@ -85,7 +85,7 @@ DB_NAME=whatsapp_bot
 npm install
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Start with MongoDB (Recommended)
 
@@ -137,7 +137,7 @@ Automatic indexes are created for:
 - Settings keys
 - Analytics dates and types
 
-## 📊 Monitoring
+## Monitoring
 
 ### Health Check
 
@@ -214,7 +214,7 @@ db.messages.getIndexes()
 db.messages.drop()
 ```
 
-## 🔄 Switching Between Storage Types
+## Switching Between Storage Types
 
 ### To MongoDB:
 1. Set `MONGODB_URI` in `.env`
@@ -228,19 +228,19 @@ db.messages.drop()
 ## 🎯 Performance Benefits
 
 **MongoDB advantages:**
-- ✅ Better performance with large datasets
-- ✅ Advanced querying capabilities
-- ✅ Automatic indexing
-- ✅ Concurrent access support
-- ✅ Data validation and constraints
-- ✅ Built-in backup and replication
-- ✅ Horizontal scaling capabilities
+- Better performance with large datasets
+- Advanced querying capabilities
+- Automatic indexing
+- Concurrent access support
+- Data validation and constraints
+- Built-in backup and replication
+- Horizontal scaling capabilities
 
 **File storage advantages:**
-- ✅ No external dependencies
-- ✅ Simple setup
-- ✅ Direct file access
-- ✅ Easy to backup
+- No external dependencies
+- Simple setup
+- Direct file access
+- Easy to backup
 
 ## 🚨 Troubleshooting
 

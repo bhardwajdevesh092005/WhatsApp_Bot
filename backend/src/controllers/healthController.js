@@ -55,7 +55,7 @@ export class HealthController {
       });
       
     } catch (error) {
-      console.error('❌ Error in health check:', error);
+      console.error(' Error in health check:', error);
       res.status(500).json({
         success: false,
         status: 'unhealthy',
@@ -121,7 +121,7 @@ export class HealthController {
       });
       
     } catch (error) {
-      console.error('❌ Error in detailed health check:', error);
+      console.error(' Error in detailed health check:', error);
       res.status(500).json({
         success: false,
         error: 'Detailed health check failed',

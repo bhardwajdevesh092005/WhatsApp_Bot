@@ -10,27 +10,27 @@ A modern React-based admin dashboard for managing WhatsApp Bot operations, built
 - Recent messages overview
 - Quick action buttons
 
-### 💬 Message Management
+###  Message Management
 - View all sent and received messages
 - Advanced filtering (date, status, sender)
 - Search functionality
 - Message status tracking (sent, delivered, failed)
 
-### 📤 Send Messages
+### Send Messages
 - Send text messages to WhatsApp contacts
 - File attachment support (images, documents)
 - Recipient validation
 - Message preview
 - Recent contacts quick access
 
-### 📊 Analytics
+### Analytics
 - Message volume trends
 - Response time analytics
 - Contact activity statistics
 - Hourly distribution charts
 - Error analysis and reporting
 
-### ⚙️ Settings
+###  Settings
 - Bot configuration
 - Auto-reply settings
 - Device connection management

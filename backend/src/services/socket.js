@@ -4,12 +4,12 @@ export class SocketService {
     this.connectedClients = new Map();
     this.rooms = new Set();
     
-    console.log('🔌 Socket service initialized');
+    console.log(' Socket service initialized');
   }
 
   // Handle new client connection
   handleConnection(socket) {
-    console.log(`👤 New client connected: ${socket.id}`);
+    console.log(` New client connected: ${socket.id}`);
     
     // Store client info
     this.connectedClients.set(socket.id, {
@@ -40,7 +40,7 @@ export class SocketService {
 
   // Handle client disconnection
   handleDisconnection(socket) {
-    console.log(`👤 Client disconnected: ${socket.id}`);
+    console.log(` Client disconnected: ${socket.id}`);
     
     const client = this.connectedClients.get(socket.id);
     if (client) {
@@ -68,7 +68,7 @@ export class SocketService {
           timestamp: new Date().toISOString()
         });
         
-        console.log(`👤 Client ${socket.id} joined room: ${room}`);
+        console.log(` Client ${socket.id} joined room: ${room}`);
       }
     });
 
@@ -84,7 +84,7 @@ export class SocketService {
           timestamp: new Date().toISOString()
         });
         
-        console.log(`👤 Client ${socket.id} left room: ${room}`);
+        console.log(` Client ${socket.id} left room: ${room}`);
       }
     });
 
@@ -117,14 +117,14 @@ export class SocketService {
     // Generic ping/pong for connection health
     socket.on('ping', () => {
       this.updateClientActivity(socket.id);
-      socket.emit('pong', {
+      socket.emit('ping', {
         timestamp: new Date().toISOString()
       });
     });
 
     // Error handling
     socket.on('error', (error) => {
-      console.error(`❌ Socket error from ${socket.id}:`, error);
+      console.error(` Socket error from ${socket.id}:`, error);
     });
   }
 
@@ -136,7 +136,7 @@ export class SocketService {
     };
     
     this.io.emit(event, payload);
-    console.log(`📡 Broadcasted event: ${event} to ${this.connectedClients.size} clients`);
+    console.log(` Broadcasted event: ${event} to ${this.connectedClients.size} clients`);
   }
 
   // Emit event to specific room
@@ -147,7 +147,7 @@ export class SocketService {
     };
     
     this.io.to(room).emit(event, payload);
-    console.log(`📡 Broadcasted event: ${event} to room: ${room}`);
+    console.log(` Broadcasted event: ${event} to room: ${room}`);
   }
 
   // Emit event to specific client
@@ -160,7 +160,7 @@ export class SocketService {
       };
       
       client.socket.emit(event, payload);
-      console.log(`📡 Sent event: ${event} to client: ${socketId}`);
+      console.log(` Sent event: ${event} to client: ${socketId}`);
     }
   }
 
@@ -274,7 +274,7 @@ export class SocketService {
     this.connectedClients.forEach((client, socketId) => {
       const lastActivity = new Date(client.lastActivity);
       if ((now - lastActivity) > inactiveThreshold) {
-        console.log(`🧹 Cleaning up inactive connection: ${socketId}`);
+        console.log(` Cleaning up inactive connection: ${socketId}`);
         client.socket.disconnect(true);
         this.connectedClients.delete(socketId);
       }
@@ -312,9 +312,9 @@ export class SocketService {
   cleanup() {
     try {
       this.connectedClients.clear();
-      console.log('✅ Socket service cleanup completed');
+      console.log('Socket service cleanup completed');
     } catch (error) {
-      console.error('❌ Error during socket service cleanup:', error);
+      console.error(' Error during socket service cleanup:', error);
     }
   }
 }

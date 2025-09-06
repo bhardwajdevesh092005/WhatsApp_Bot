@@ -35,7 +35,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting messages:', error);
+      console.error(' Error getting messages:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get messages',
@@ -58,7 +58,7 @@ export class MessagesController {
         });
         
     } catch (error) {
-      console.error('❌ Error getting all messages:', error);
+      console.error(' Error getting all messages:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get all messages',
@@ -91,7 +91,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting message:', error);
+      console.error(' Error getting message:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get message',
@@ -141,7 +141,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error sending message:', error);
+      console.error(' Error sending message:', error);
       
       // Handle specific error types
       if (error.message.includes('not ready')) {
@@ -205,7 +205,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error updating message status:', error);
+      console.error(' Error updating message status:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to update message status',
@@ -233,7 +233,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error deleting message:', error);
+      console.error(' Error deleting message:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to delete message',
@@ -324,7 +324,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error in bulk send:', error);
+      console.error(' Error in bulk send:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to send bulk messages',
@@ -336,7 +336,7 @@ export class MessagesController {
   // GET /api/messages/statistics - Get message statistics
   static async getMessageStatistics(req, res) {
     try {
-      const { dataService } = req.app.locals;
+      const {   dataService } = req.app.locals;
       const timeRange = req.query.timeRange || 'week';
       
       const analytics = await dataService.getAnalytics(timeRange);
@@ -351,7 +351,7 @@ export class MessagesController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting message statistics:', error);
+      console.error(' Error getting message statistics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get message statistics',

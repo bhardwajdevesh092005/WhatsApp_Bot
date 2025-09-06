@@ -22,7 +22,7 @@ export class DataService {
 
   async initialize() {
     try {
-      console.log('🔄 Initializing data service...');
+      console.log('Initializing data service...');
       
       // Ensure data directory exists
       await this.ensureDirectoryExists(this.dataPath);
@@ -33,13 +33,13 @@ export class DataService {
       await this.loadAnalytics();
       
       this.isInitialized = true;
-      console.log('✅ Data service initialized successfully');
+      console.log('Data service initialized successfully');
       
       // Start periodic data persistence
       this.startPeriodicSave();
       
     } catch (error) {
-      console.error('❌ Failed to initialize data service:', error);
+      console.error(' Failed to initialize data service:', error);
       throw error;
     }
   }
@@ -74,10 +74,10 @@ export class DataService {
       // Persist data
       await this.persistMessages();
       
-      console.log(`💾 Saved message: ${messageData.id}`);
+      console.log(` Saved message: ${messageData.id}`);
       
     } catch (error) {
-      console.error('❌ Error saving message:', error);
+      console.error(' Error saving message:', error);
       throw error;
     }
   }
@@ -90,10 +90,10 @@ export class DataService {
         this.messages[messageIndex].statusUpdatedAt = new Date().toISOString();
         
         await this.persistMessages();
-        console.log(`📝 Updated message ${messageId} status to: ${status}`);
+        console.log(` Updated message ${messageId} status to: ${status}`);
       }
     } catch (error) {
-      console.error('❌ Error updating message status:', error);
+      console.error(' Error updating message status:', error);
       throw error;
     }
   }
@@ -198,10 +198,10 @@ export class DataService {
     try {
       this.settings = { ...this.settings, ...newSettings };
       await this.persistSettings();
-      console.log('⚙️ Settings updated successfully');
+      console.log(' Settings updated successfully');
       return this.settings;
     } catch (error) {
-      console.error('❌ Error updating settings:', error);
+      console.error(' Error updating settings:', error);
       throw error;
     }
   }
@@ -484,7 +484,7 @@ export class DataService {
         const filePath = path.join(this.dataPath, 'messages.json');
         await fs.writeFile(filePath, JSON.stringify(this.messages, null, 2));
       } catch (error) {
-        console.error('❌ Error persisting messages:', error);
+        console.error(' Error persisting messages:', error);
       }
     }
   }
@@ -495,7 +495,7 @@ export class DataService {
         const filePath = path.join(this.dataPath, 'settings.json');
         await fs.writeFile(filePath, JSON.stringify(this.settings, null, 2));
       } catch (error) {
-        console.error('❌ Error persisting settings:', error);
+        console.error(' Error persisting settings:', error);
       }
     }
   }
@@ -513,7 +513,7 @@ export class DataService {
         const filePath = path.join(this.dataPath, 'analytics.json');
         await fs.writeFile(filePath, JSON.stringify(analyticsData, null, 2));
       } catch (error) {
-        console.error('❌ Error persisting analytics:', error);
+        console.error(' Error persisting analytics:', error);
       }
     }
   }
@@ -534,9 +534,9 @@ export class DataService {
       const filePath = path.join(this.dataPath, 'settings.json');
       const data = await fs.readFile(filePath, 'utf8');
       this.settings = { ...this.getDefaultSettings(), ...JSON.parse(data) };
-      console.log('⚙️ Loaded settings from storage');
+      console.log(' Loaded settings from storage');
     } catch (error) {
-      console.log('⚙️ No existing settings found, using defaults');
+      console.log(' No existing settings found, using defaults');
     }
   }
 
@@ -551,9 +551,9 @@ export class DataService {
       this.analytics.contactStats = new Map(analyticsData.contactStats || []);
       this.analytics.errorLog = analyticsData.errorLog || [];
       
-      console.log('📊 Loaded analytics from storage');
+      console.log('Loaded analytics from storage');
     } catch (error) {
-      console.log('📊 No existing analytics found, starting fresh');
+      console.log('No existing analytics found, starting fresh');
     }
   }
 
@@ -564,9 +564,9 @@ export class DataService {
         await this.persistMessages();
         await this.persistSettings();
         await this.persistAnalytics();
-        console.log('💾 Periodic data save completed');
+        console.log(' Periodic data save completed');
       } catch (error) {
-        console.error('❌ Error in periodic save:', error);
+        console.error(' Error in periodic save:', error);
       }
     }, 5 * 60 * 1000); // Save every 5 minutes
   }
@@ -577,7 +577,7 @@ export class DataService {
       const filePath = path.join(this.dataPath, `${key}.json`);
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
     } catch (error) {
-      console.error(`❌ Error saving ${key}:`, error);
+      console.error(` Error saving ${key}:`, error);
     }
   }
 
@@ -611,9 +611,9 @@ export class DataService {
       await this.persistMessages();
       await this.persistSettings();
       await this.persistAnalytics();
-      console.log('🧹 Data service cleanup completed');
+      console.log(' Data service cleanup completed');
     } catch (error) {
-      console.error('❌ Error during data service cleanup:', error);
+      console.error(' Error during data service cleanup:', error);
     }
   }
 }

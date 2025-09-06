@@ -69,13 +69,13 @@ export class WhatsAppService {
         });
         
       } catch (error) {
-        console.error('❌ Error generating QR code:', error);
+        console.error(' Error generating QR code:', error);
       }
     });
 
     // Client ready
     this.client.on('ready', async () => {
-      console.log('✅ WhatsApp Client is ready!');
+      console.log('WhatsApp Client is ready!');
       
       this.isReady = true;
       this.status = 'connected';
@@ -113,7 +113,7 @@ export class WhatsAppService {
 
     // Authentication failure
     this.client.on('auth_failure', (msg) => {
-      console.error('❌ WhatsApp authentication failed:', msg);
+      console.error('WhatsApp authentication failed:', msg);
       this.status = 'auth_failed';
       this.emitStatusUpdate();
       
@@ -123,7 +123,7 @@ export class WhatsAppService {
 
     // Disconnected
     this.client.on('disconnected', (reason) => {
-      console.log('🔌 WhatsApp Client disconnected:', reason);
+      console.log('WhatsApp Client disconnected:', reason);
       this.isReady = false;
       this.status = 'disconnected';
       this.clientInfo = null;
@@ -136,7 +136,7 @@ export class WhatsAppService {
     // Incoming messages
     this.client.on('message', async (message) => {
       try {
-        console.log('📨 Received message:', message.body);
+        console.log('Received message:', message.body);
         
         // Process incoming message
         const messageData = await this.processIncomingMessage(message);
@@ -151,7 +151,7 @@ export class WhatsAppService {
         await this.handleAutoReply(message, messageData);
         
       } catch (error) {
-        console.error('❌ Error processing incoming message:', error);
+        console.error('Error processing incoming message:', error);
       }
     });
 
@@ -159,7 +159,7 @@ export class WhatsAppService {
     this.client.on('message_ack', async (message, ack) => {
       try {
         const status = this.getMessageStatus(ack);
-        console.log(`📝 Message ${message.id._serialized} status: ${status}`);
+        console.log(`Message ${message.id._serialized} status: ${status}`);
         
         // Update message status in data service
         await this.dataService.updateMessageStatus(message.id._serialized, status);
@@ -172,17 +172,17 @@ export class WhatsAppService {
         });
         
       } catch (error) {
-        console.error('❌ Error updating message status:', error);
+        console.error(' Error updating message status:', error);
       }
     });
   }
 
   async initialize() {
     try {
-      console.log('🔄 Initializing WhatsApp client...');
+      console.log('Initializing WhatsApp client...');
       await this.client.initialize();
     } catch (error) {
-      console.error('❌ Failed to initialize WhatsApp client:', error);
+      console.error(' Failed to initialize WhatsApp client:', error);
       throw error;
     }
   }
@@ -193,7 +193,7 @@ export class WhatsAppService {
     }
 
     try {
-      console.log(`📤 Sending message to ${to}: ${message}`);
+      console.log(`Sending message to ${to}: ${message}`);
       
       // Format phone number
       const formattedNumber = this.formatPhoneNumber(to);
@@ -226,7 +226,7 @@ export class WhatsAppService {
       };
       
     } catch (error) {
-      console.error('❌ Error sending message:', error);
+      console.error(' Error sending message:', error);
       
       // Create failed message record
       const failedMessageData = {
@@ -312,7 +312,7 @@ export class WhatsAppService {
         settings.autoReplyMessage || 'Thanks for your message! We will get back to you soon.'
       );
     } catch (error) {
-      console.error('❌ Error sending auto-reply:', error);
+      console.error(' Error sending auto-reply:', error);
     }
   }
 
@@ -368,7 +368,7 @@ export class WhatsAppService {
     this.retryCount++;
     
     if (this.retryCount < this.maxRetries) {
-      console.log(`🔄 Retrying authentication (${this.retryCount}/${this.maxRetries})...`);
+      console.log(`Retrying authentication (${this.retryCount}/${this.maxRetries})...`);
       
       setTimeout(() => {
         this.client.destroy();
@@ -376,7 +376,7 @@ export class WhatsAppService {
         this.client.initialize();
       }, 5000);
     } else {
-      console.error('❌ Max authentication retries reached');
+      console.error(' Max authentication retries reached');
       this.status = 'auth_failed_max_retries';
       this.emitStatusUpdate();
     }
@@ -385,13 +385,13 @@ export class WhatsAppService {
   async handleDisconnection() {
     if (this.retryCount < this.maxRetries) {
       this.retryCount++;
-      console.log(`🔄 Attempting to reconnect (${this.retryCount}/${this.maxRetries})...`);
+      console.log(`Attempting to reconnect (${this.retryCount}/${this.maxRetries})...`);
       
       setTimeout(async () => {
         try {
           await this.client.initialize();
         } catch (error) {
-          console.error('❌ Reconnection failed:', error);
+          console.error(' Reconnection failed:', error);
           this.handleDisconnection();
         }
       }, 10000);
@@ -411,7 +411,7 @@ export class WhatsAppService {
   }
 
   async reconnect() {
-    console.log('🔄 Manual reconnection requested...');
+    console.log('Manual reconnection requested...');
     this.retryCount = 0;
     
     try {
@@ -424,13 +424,13 @@ export class WhatsAppService {
       
       return { success: true, message: 'Reconnection initiated' };
     } catch (error) {
-      console.error('❌ Manual reconnection failed:', error);
+      console.error(' Manual reconnection failed:', error);
       throw new Error(`Reconnection failed: ${error.message}`);
     }
   }
 
   async disconnect() {
-    console.log('🔌 Manual disconnection requested...');
+    console.log(' Manual disconnection requested...');
     
     try {
       if (this.client) {
@@ -446,7 +446,7 @@ export class WhatsAppService {
       
       return { success: true, message: 'Disconnected successfully' };
     } catch (error) {
-      console.error('❌ Disconnection failed:', error);
+      console.error(' Disconnection failed:', error);
       throw new Error(`Disconnection failed: ${error.message}`);
     }
   }
@@ -472,7 +472,7 @@ export class WhatsAppService {
       // No QR code available
       return null;
     } catch (error) {
-      console.error('❌ Error getting QR code:', error);
+      console.error(' Error getting QR code:', error);
       return null;
     }
   }
@@ -493,7 +493,7 @@ export class WhatsAppService {
         profilePicUrl: contact.profilePicUrl
       }));
     } catch (error) {
-      console.error('❌ Error getting contacts:', error);
+      console.error(' Error getting contacts:', error);
       throw new Error(`Failed to get contacts: ${error.message}`);
     }
   }
@@ -517,7 +517,7 @@ export class WhatsAppService {
         } : null
       }));
     } catch (error) {
-      console.error('❌ Error getting chats:', error);
+      console.error(' Error getting chats:', error);
       throw new Error(`Failed to get chats: ${error.message}`);
     }
   }
@@ -540,14 +540,14 @@ export class WhatsAppService {
       
       return { success: true, message: 'Logged out successfully' };
     } catch (error) {
-      console.error('❌ Logout failed:', error);
+      console.error(' Logout failed:', error);
       throw new Error(`Logout failed: ${error.message}`);
     }
   }
 
   async restart() {
     try {
-      console.log('🔄 Restarting WhatsApp service...');
+      console.log('Restarting WhatsApp service...');
       
       // Disconnect first
       await this.disconnect();
@@ -561,20 +561,20 @@ export class WhatsAppService {
       
       return { success: true, message: 'Restart initiated' };
     } catch (error) {
-      console.error('❌ Restart failed:', error);
+      console.error(' Restart failed:', error);
       throw new Error(`Restart failed: ${error.message}`);
     }
   }
 
   async cleanup() {
-    console.log('🧹 Cleaning up WhatsApp service...');
+    console.log(' Cleaning up WhatsApp service...');
     
     try {
       if (this.client) {
         await this.client.destroy();
       }                                                                                            
     } catch (error) {
-      console.error('❌ Error during WhatsApp service cleanup:', error);
+      console.error(' Error during WhatsApp service cleanup:', error);
                                                                                                                                                                                                                         }
   }
 }

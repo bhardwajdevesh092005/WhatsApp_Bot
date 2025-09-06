@@ -1,6 +1,6 @@
 // Error handling middleware
 export const errorHandler = (err, req, res, next) => {
-  console.error('❌ Error:', err);
+  console.error(' Error:', err);
   
   // Multer errors (file upload)
   if (err.code === 'LIMIT_FILE_SIZE') {

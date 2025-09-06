@@ -82,7 +82,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Initialize services
 const initializeServices = async () => {
   try {
-    console.log('🔄 Initializing services...');
+    console.log('Initializing services...');
     
     // Connect to MongoDB first
     await databaseService.connect();
@@ -91,7 +91,7 @@ const initializeServices = async () => {
     const useMongoDb = process.env.MONGODB_URI || process.env.USE_MONGODB === 'true';
     
     if (useMongoDb) {
-      console.log('📊 Using MongoDB for data storage...');
+      console.log('Using MongoDB for data storage...');
       dataService = new MongoDataService();
       await dataService.initialize();
     } else {
@@ -107,7 +107,7 @@ const initializeServices = async () => {
     whatsappService = new WhatsAppService(socketService, dataService);
     await whatsappService.initialize();
     
-    console.log('✅ All services initialized successfully');
+    console.log('All services initialized successfully');
     
     // Make services available globally
     app.locals.whatsappService = whatsappService;
@@ -116,11 +116,11 @@ const initializeServices = async () => {
     app.locals.databaseService = databaseService;
     
   } catch (error) {
-    console.error('❌ Failed to initialize services:', error);
+    console.error(' Failed to initialize services:', error);
     
     // Fallback to file-based storage if MongoDB fails
     if (error.message.includes('MongoDB')) {
-      console.log('⚠️  MongoDB connection failed, falling back to file-based storage...');
+      console.log('MongoDB connection failed, falling back to file-based storage...');
       try {
         dataService = new DataService();
         await dataService.initialize();
@@ -133,9 +133,9 @@ const initializeServices = async () => {
         app.locals.socketService = socketService;
         app.locals.dataService = dataService;
         
-        console.log('✅ Services initialized with file-based storage');
+        console.log('Services initialized with file-based storage');
       } catch (fallbackError) {
-        console.error('❌ Failed to initialize even with fallback:', fallbackError);
+        console.error(' Failed to initialize even with fallback:', fallbackError);
         process.exit(1);
       }
     } else {
@@ -202,14 +202,13 @@ app.use('*', (req, res) => {
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
-  console.log(`👤 Client connected: ${socket.id}`);
-  
+  console.log(` Client connected: ${socket.id}`);
   if (socketService) {
     socketService.handleConnection(socket);
   }
   
   socket.on('disconnect', (reason) => {
-    console.log(`👤 Client disconnected: ${socket.id} (${reason})`);
+    console.log(` Client disconnected: ${socket.id} (${reason})`);
     if (socketService) {
       socketService.handleDisconnection(socket);
     }
@@ -218,35 +217,35 @@ io.on('connection', (socket) => {
 
 // Graceful shutdown
 const gracefulShutdown = async (signal) => {
-  console.log(`\n🔄 Received ${signal}. Starting graceful shutdown...`);
+  console.log(`\nReceived ${signal}. Starting graceful shutdown...`);
   
   // Close HTTP server
   server.close(async () => {
-    console.log('🔄 HTTP server closed');
+    console.log('HTTP server closed');
     
     // Clean up services
     if (whatsappService) {
       await whatsappService.cleanup();
-      console.log('🔄 WhatsApp service cleaned up');
+      console.log('WhatsApp service cleaned up');
     }
     
     if (dataService) {
       await dataService.cleanup?.();
-      console.log('🔄 Data service cleaned up');
+      console.log('Data service cleaned up');
     }
     
     if (databaseService) {
       await databaseService.disconnect();
-      console.log('🔄 Database connection closed');
+      console.log('Database connection closed');
     }
     
-    console.log('✅ Graceful shutdown completed');
+    console.log('Graceful shutdown completed');
     process.exit(0);
   });
   
   // Force close after 10 seconds
   setTimeout(() => {
-    console.error('❌ Could not close connections in time, forcefully shutting down');
+    console.error(' Could not close connections in time, forcefully shutting down');
     process.exit(1);
   }, 10000);
 };
@@ -257,12 +256,12 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
+  console.error(' Uncaught Exception:', error);
   gracefulShutdown('uncaughtException');
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error(' Unhandled Rejection at:', promise, 'reason:', reason);
   gracefulShutdown('unhandledRejection');
 });
 
@@ -275,17 +274,17 @@ const startServer = async () => {
     await initializeServices();
     
     server.listen(PORT, HOST, () => {
-      console.log(`🚀 WhatsApp Bot API Server is running on http://${HOST}:${PORT}`);
-      console.log(`📊 Dashboard API: http://${HOST}:${PORT}/api/dashboard`);
-      console.log(`💬 Messages API: http://${HOST}:${PORT}/api/messages`);
-      console.log(`📈 Analytics API: http://${HOST}:${PORT}/api/analytics`);
-      console.log(`⚙️  Settings API: http://${HOST}:${PORT}/api/settings`);
-      console.log(`🤖 Bot API: http://${HOST}:${PORT}/api/bot`);
-      console.log(`❤️  Health Check: http://${HOST}:${PORT}/api/health`);
-      console.log(`🔌 WebSocket Server: ws://${HOST}:${PORT}`);
+      console.log(`WhatsApp Bot API Server is running on http://${HOST}:${PORT}`);
+      console.log(`Dashboard API: http://${HOST}:${PORT}/api/dashboard`);
+      console.log(`Messages API: http://${HOST}:${PORT}/api/messages`);
+      console.log(`Analytics API: http://${HOST}:${PORT}/api/analytics`);
+      console.log(`Settings API: http://${HOST}:${PORT}/api/settings`);
+      console.log(`Bot API: http://${HOST}:${PORT}/api/bot`);
+      console.log(`Health Check: http://${HOST}:${PORT}/api/health`);
+      console.log(`WebSocket Server: ws://${HOST}:${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    console.error(' Failed to start server:', error);
     process.exit(1);
   }
 };

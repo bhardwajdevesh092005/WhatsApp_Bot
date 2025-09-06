@@ -1,10 +1,10 @@
 # WhatsApp Web.js Configuration Guide
 
-## 🚀 Current Setup Overview
+##  Current Setup Overview
 
 Your WhatsApp bot is already well-configured! Here's what you have:
 
-### ✅ Dependencies Installed
+### Dependencies Installed
 - `whatsapp-web.js`: ^1.23.0 ✅
 - `qrcode`: ^1.5.3 ✅
 - `socket.io`: ^4.7.4 ✅
@@ -57,15 +57,15 @@ SESSION_SECRET=your-secret-key-here
 ### 3. **Event Handlers** (Already Implemented)
 
 Your service handles these events:
-- ✅ `qr` - QR code generation
-- ✅ `ready` - Client ready
-- ✅ `authenticated` - Authentication success
-- ✅ `auth_failure` - Authentication failure
-- ✅ `disconnected` - Disconnection handling
-- ✅ `message` - Incoming messages
-- ✅ `message_ack` - Message acknowledgments
+- `qr` - QR code generation
+- `ready` - Client ready
+- `authenticated` - Authentication success
+- `auth_failure` - Authentication failure
+- `disconnected` - Disconnection handling
+- `message` - Incoming messages
+- `message_ack` - Message acknowledgments
 
-## 🚀 How to Start Your Bot
+##  How to Start Your Bot
 
 ### Method 1: Using the API
 ```bash
@@ -88,7 +88,7 @@ curl -X POST http://localhost:3001/api/bot/connect
 3. **Authentication**: Session is saved locally
 4. **Ready**: Bot is ready to send/receive messages
 
-## 🔄 Connection States
+## Connection States
 
 - `disconnected` - Initial state
 - `qr_code` - QR code generated, waiting for scan
@@ -181,7 +181,7 @@ rm -rf .wwebjs_auth/
 npm start
 ```
 
-## 📊 Monitoring & Logging
+## Monitoring & Logging
 
 Your service includes comprehensive logging:
 - Connection status updates
@@ -198,9 +198,9 @@ Your service includes comprehensive logging:
 
 ## 🎯 Next Steps
 
-1. ✅ Your configuration is already production-ready
-2. 🔄 Test the connection: `POST /api/bot/connect`
+1. Your configuration is already production-ready
+2. Test the connection: `POST /api/bot/connect`
 3. 📱 Scan QR code with WhatsApp mobile
-4. 💬 Start sending messages via API or frontend
+4.  Start sending messages via API or frontend
 
 Your WhatsApp Web.js setup is comprehensive and follows best practices!

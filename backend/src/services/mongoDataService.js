@@ -16,9 +16,9 @@ class MongoDataService {
       }
       
       this.initialized = true;
-      console.log('✅ MongoDataService initialized successfully');
+      console.log('MongoDataService initialized successfully');
     } catch (error) {
-      console.error('❌ Error initializing MongoDataService:', error);
+      console.error(' Error initializing MongoDataService:', error);
       throw error;
     }
   }
@@ -48,15 +48,15 @@ class MongoDataService {
       });
 
       const savedMessage = await message.save();
-      console.log(`💾 Message saved: ${savedMessage.messageId}`);
+      console.log(` Message saved: ${savedMessage.messageId}`);
       return savedMessage;
     } catch (error) {
       if (error.code === 11000) {
         // Duplicate key error - message already exists
-        console.log(`⚠️  Message already exists: ${messageData.id || messageData.messageId}`);
+        console.log(`Message already exists: ${messageData.id || messageData.messageId}`);
         return await Message.findOne({ messageId: messageData.id || messageData.messageId });
       }
-      console.error('❌ Error saving message:', error);
+      console.error(' Error saving message:', error);
       throw error;
     }
   }
@@ -83,7 +83,7 @@ class MongoDataService {
 
       return messages;
     } catch (error) {
-      console.error('❌ Error loading messages:', error);
+      console.error(' Error loading messages:', error);
       throw error;
     }
   }
@@ -92,7 +92,7 @@ class MongoDataService {
     try {
       return await Message.findOne({ messageId }).lean();
     } catch (error) {
-      console.error('❌ Error getting message by ID:', error);
+      console.error(' Error getting message by ID:', error);
       throw error;
     }
   }
@@ -105,7 +105,7 @@ class MongoDataService {
       );
       return result.modifiedCount > 0;
     } catch (error) {
-      console.error('❌ Error updating message status:', error);
+      console.error(' Error updating message status:', error);
       throw error;
     }
   }
@@ -115,7 +115,7 @@ class MongoDataService {
       const result = await Message.deleteOne({ messageId });
       return result.deletedCount > 0;
     } catch (error) {
-      console.error('❌ Error deleting message:', error);
+      console.error(' Error deleting message:', error);
       throw error;
     }
   }
@@ -141,10 +141,10 @@ class MongoDataService {
         { upsert: true, new: true }
       );
 
-      console.log(`👤 Contact saved: ${contact.contactId}`);
+      console.log(` Contact saved: ${contact.contactId}`);
       return contact;
     } catch (error) {
-      console.error('❌ Error saving contact:', error);
+      console.error(' Error saving contact:', error);
       throw error;
     }
   }
@@ -159,7 +159,7 @@ class MongoDataService {
 
       return contacts;
     } catch (error) {
-      console.error('❌ Error loading contacts:', error);
+      console.error(' Error loading contacts:', error);
       throw error;
     }
   }
@@ -168,7 +168,7 @@ class MongoDataService {
     try {
       return await Contact.findOne({ contactId }).lean();
     } catch (error) {
-      console.error('❌ Error getting contact by ID:', error);
+      console.error(' Error getting contact by ID:', error);
       throw error;
     }
   }
@@ -182,10 +182,10 @@ class MongoDataService {
         { upsert: true, new: true }
       );
 
-      console.log(`⚙️  Setting saved: ${key}`);
+      console.log(`  Setting saved: ${key}`);
       return setting;
     } catch (error) {
-      console.error('❌ Error saving setting:', error);
+      console.error(' Error saving setting:', error);
       throw error;
     }
   }
@@ -203,7 +203,7 @@ class MongoDataService {
 
       return settingsObj;
     } catch (error) {
-      console.error('❌ Error loading settings:', error);
+      console.error(' Error loading settings:', error);
       throw error;
     }
   }
@@ -213,7 +213,7 @@ class MongoDataService {
       const setting = await Settings.findOne({ key }).lean();
       return setting ? setting.value : defaultValue;
     } catch (error) {
-      console.error('❌ Error getting setting:', error);
+      console.error(' Error getting setting:', error);
       return defaultValue;
     }
   }
@@ -223,7 +223,7 @@ class MongoDataService {
       const result = await Settings.deleteOne({ key });
       return result.deletedCount > 0;
     } catch (error) {
-      console.error('❌ Error deleting setting:', error);
+      console.error(' Error deleting setting:', error);
       throw error;
     }
   }
@@ -240,10 +240,10 @@ class MongoDataService {
       });
 
       const savedAnalytics = await analytics.save();
-      console.log(`📊 Analytics saved: ${type} for ${date.toISOString().split('T')[0]}`);
+      console.log(`Analytics saved: ${type} for ${date.toISOString().split('T')[0]}`);
       return savedAnalytics;
     } catch (error) {
-      console.error('❌ Error saving analytics:', error);
+      console.error(' Error saving analytics:', error);
       throw error;
     }
   }
@@ -263,7 +263,7 @@ class MongoDataService {
 
       return analytics;
     } catch (error) {
-      console.error('❌ Error loading analytics:', error);
+      console.error(' Error loading analytics:', error);
       throw error;
     }
   }
@@ -291,7 +291,7 @@ class MongoDataService {
 
       return summary;
     } catch (error) {
-      console.error('❌ Error getting analytics summary:', error);
+      console.error(' Error getting analytics summary:', error);
       throw error;
     }
   }
@@ -308,7 +308,7 @@ class MongoDataService {
       console.log(`🔑 Session data saved: ${key}`);
       return sessionData;
     } catch (error) {
-      console.error('❌ Error saving session data:', error);
+      console.error(' Error saving session data:', error);
       throw error;
     }
   }
@@ -318,7 +318,7 @@ class MongoDataService {
       const sessionData = await SessionData.findOne({ key }).lean();
       return sessionData ? sessionData.data : null;
     } catch (error) {
-      console.error('❌ Error loading session data:', error);
+      console.error(' Error loading session data:', error);
       throw error;
     }
   }
@@ -328,7 +328,7 @@ class MongoDataService {
       const result = await SessionData.deleteOne({ key });
       return result.deletedCount > 0;
     } catch (error) {
-      console.error('❌ Error deleting session data:', error);
+      console.error(' Error deleting session data:', error);
       throw error;
     }
   }
@@ -352,10 +352,10 @@ class MongoDataService {
         { upsert: true, new: true }
       );
 
-      console.log(`💬 Chat saved: ${chat.chatId}`);
+      console.log(` Chat saved: ${chat.chatId}`);
       return chat;
     } catch (error) {
-      console.error('❌ Error saving chat:', error);
+      console.error(' Error saving chat:', error);
       throw error;
     }
   }
@@ -370,7 +370,7 @@ class MongoDataService {
 
       return chats;
     } catch (error) {
-      console.error('❌ Error loading chats:', error);
+      console.error(' Error loading chats:', error);
       throw error;
     }
   }
@@ -378,7 +378,7 @@ class MongoDataService {
   // Migration utilities
   async migrateFromJsonFiles(dataDir = './data') {
     try {
-      console.log('🔄 Starting migration from JSON files...');
+      console.log('Starting migration from JSON files...');
 
       // Migrate messages
       try {
@@ -389,10 +389,10 @@ class MongoDataService {
           for (const message of messagesData) {
             await this.saveMessage(message);
           }
-          console.log(`✅ Migrated ${messagesData.length} messages`);
+          console.log(`Migrated ${messagesData.length} messages`);
         }
       } catch (error) {
-        console.log('⚠️  No messages.json found or error reading it');
+        console.log('No messages.json found or error reading it');
       }
 
       // Migrate settings
@@ -403,9 +403,9 @@ class MongoDataService {
         for (const [key, value] of Object.entries(settingsData)) {
           await this.saveSetting(key, value);
         }
-        console.log(`✅ Migrated ${Object.keys(settingsData).length} settings`);
+        console.log(`Migrated ${Object.keys(settingsData).length} settings`);
       } catch (error) {
-        console.log('⚠️  No settings.json found or error reading it');
+        console.log('No settings.json found or error reading it');
       }
 
       // Migrate analytics
@@ -417,15 +417,15 @@ class MongoDataService {
           for (const analytics of analyticsData) {
             await this.saveAnalytics(analytics.type, analytics.data, analytics.date);
           }
-          console.log(`✅ Migrated ${analyticsData.length} analytics records`);
+          console.log(`Migrated ${analyticsData.length} analytics records`);
         }
       } catch (error) {
-        console.log('⚠️  No analytics.json found or error reading it');
+        console.log('No analytics.json found or error reading it');
       }
 
-      console.log('✅ Migration completed successfully');
+      console.log('Migration completed successfully');
     } catch (error) {
-      console.error('❌ Error during migration:', error);
+      console.error(' Error during migration:', error);
       throw error;
     }
   }
@@ -492,7 +492,7 @@ class MongoDataService {
       }
       return defaultData;
     } catch (error) {
-      console.error(`❌ Error loading data for ${filename}:`, error);
+      console.error(` Error loading data for ${filename}:`, error);
       return defaultData;
     }
   }

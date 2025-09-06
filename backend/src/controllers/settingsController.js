@@ -15,7 +15,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting settings:', error);
+      console.error(' Error getting settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get settings',
@@ -50,7 +50,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting setting:', error);
+      console.error(' Error getting setting:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get setting',
@@ -98,7 +98,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error updating settings:', error);
+      console.error(' Error updating settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to update settings',
@@ -152,7 +152,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error updating setting:', error);
+      console.error(' Error updating setting:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to update setting',
@@ -185,7 +185,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error resetting settings:', error);
+      console.error(' Error resetting settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to reset settings',
@@ -213,7 +213,7 @@ export class SettingsController {
       res.json(backup);
       
     } catch (error) {
-      console.error('❌ Error creating settings backup:', error);
+      console.error(' Error creating settings backup:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to create settings backup',
@@ -267,7 +267,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error restoring settings:', error);
+      console.error(' Error restoring settings:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to restore settings',
@@ -353,7 +353,7 @@ export class SettingsController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting settings schema:', error);
+      console.error(' Error getting settings schema:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get settings schema',

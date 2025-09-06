@@ -41,7 +41,7 @@ export class DashboardController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting dashboard stats:', error);
+      console.error(' Error getting dashboard stats:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get dashboard stats',
@@ -71,7 +71,7 @@ export class DashboardController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting recent messages:', error);
+      console.error(' Error getting recent messages:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get recent messages',
@@ -124,7 +124,7 @@ export class DashboardController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting dashboard overview:', error);
+      console.error(' Error getting dashboard overview:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get dashboard overview',
@@ -184,7 +184,7 @@ export class DashboardController {
       });
       
     } catch (error) {
-      console.error('❌ Error getting quick stats:', error);
+      console.error(' Error getting quick stats:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to get quick stats',

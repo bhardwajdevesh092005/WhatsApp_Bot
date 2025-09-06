@@ -40,10 +40,10 @@ this.client.on('message', async (message) => {
 
 **No manual contact configuration needed!** The bot automatically:
 
-- ✅ **Extracts sender information** from incoming messages
-- ✅ **Gets contact details** (name, number, profile info)
-- ✅ **Handles phone number formatting** automatically
-- ✅ **Stores contact data** for future reference
+- **Extracts sender information** from incoming messages
+- **Gets contact details** (name, number, profile info)
+- **Handles phone number formatting** automatically
+- **Stores contact data** for future reference
 
 #### Contact Data Structure:
 ```javascript
@@ -62,7 +62,7 @@ this.client.on('message', async (message) => {
 }
 ```
 
-### 4. 🚀 **How to Start Receiving Messages**
+### 4.  **How to Start Receiving Messages**
 
 #### Step 1: Connect Your Bot
 ```bash
@@ -84,10 +84,10 @@ You already have a QR code! Either:
 
 #### Step 4: Start Receiving Messages
 Once scanned, your bot will:
-- ✅ Automatically receive ALL messages sent to your WhatsApp
-- ✅ Store them in the database
-- ✅ Show them in real-time on the frontend
-- ✅ Send auto-replies if configured
+- Automatically receive ALL messages sent to your WhatsApp
+- Store them in the database
+- Show them in real-time on the frontend
+- Send auto-replies if configured
 
 ### 5. 📱 **Phone Number Formatting**
 
@@ -109,7 +109,7 @@ formatPhoneNumber(number) {
 }
 ```
 
-### 6. 💬 **Sending Messages**
+### 6.  **Sending Messages**
 
 #### Via API:
 ```bash
@@ -134,7 +134,7 @@ curl -X POST http://localhost:3001/api/messages/upload \
 - Use the message composer
 - Select contact and send message
 
-### 7. 🤖 **Auto-Reply Configuration**
+### 7. **Auto-Reply Configuration**
 
 Configure automatic responses via settings:
 
@@ -156,7 +156,7 @@ curl -X PUT http://localhost:3001/api/settings \
   }'
 ```
 
-### 8. 📊 **Message Monitoring**
+### 8. **Message Monitoring**
 
 #### Real-time monitoring via WebSocket:
 ```javascript
@@ -227,7 +227,7 @@ Once your bot is connected:
 3. **Check the API** - message will be available at `/api/messages`
 4. **Check the frontend** - message appears in real-time
 
-### 12. 🔄 **Current Status Check**
+### 12. **Current Status Check**
 
 ```bash
 # Check if bot is ready to receive messages
@@ -247,15 +247,15 @@ curl http://localhost:3001/api/bot/status
 }
 ```
 
-## 🚀 **Ready to Go!**
+##  **Ready to Go!**
 
 Your bot is configured to automatically:
-- ✅ **Receive** all incoming messages
-- ✅ **Extract** contact information
-- ✅ **Store** message data
-- ✅ **Provide** real-time updates
-- ✅ **Handle** different phone number formats
-- ✅ **Support** media files
-- ✅ **Send** auto-replies
+- **Receive** all incoming messages
+- **Extract** contact information
+- **Store** message data
+- **Provide** real-time updates
+- **Handle** different phone number formats
+- **Support** media files
+- **Send** auto-replies
 
 **Just scan the QR code and start receiving messages immediately!** 📱
