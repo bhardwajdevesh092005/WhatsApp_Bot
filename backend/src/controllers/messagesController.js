@@ -48,12 +48,13 @@ export class MessagesController {
   static async getAllMessages(req, res) {
     try {
       const { dataService } = req.app.locals;
+    //   console.log(dataService)
       const messages = await dataService.getMessages();
         
-        res.json({
+        return res.json({
             success: true,
-            data: messages.messages,
-            total: messages.total,
+            data: messages,
+            // total: messages.length,
             lastUpdated: new Date().toISOString()
         });
         

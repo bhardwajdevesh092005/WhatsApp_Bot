@@ -1,7 +1,8 @@
 import OpenAI from 'openai';
 import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
+import dotenv from 'dotenv'
+dotenv.config();
 export class LLMService {
   constructor() {
     this.openai = null;
@@ -9,13 +10,14 @@ export class LLMService {
     this.isInitialized = false;
     this.settings = {
       provider: 'gemini', // 'openai', 'gemini', 'ollama', 'custom'
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash',
       apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
-      baseURL: process.env.LLM_BASE_URL || 'https://api.openai.com/v1',
+      baseURL: process.env.LLM_BASE_URL ||'https://generativelanguage.googleapis.com',
       maxTokens: 150,
       temperature: 0.7,
       systemPrompt: 'You are a helpful WhatsApp bot assistant. Respond naturally and helpfully to user messages. Keep responses concise and friendly.',
-      enabled: false,
+      enabled: true,
+      autoReply: true,
       fallbackMessage: 'I apologize, but I cannot process your message right now. Please try again later.',
       rateLimitPerHour: 60,
       timeout: 10000, // 10 seconds
@@ -25,10 +27,10 @@ export class LLMService {
     this.requestCount = new Map(); // Track requests per user per hour
   }
 
-  async initialize(settings = {}) {
+  async initialize(settings = {}) { 
     try {
       this.settings = { ...this.settings, ...settings };
-      
+      this.settings.apiKey = process.env.GEMINI_API_KEY;
       if (!this.settings.enabled) {
         console.log('🤖 LLM Service: Disabled in settings');
         return false;
@@ -48,18 +50,18 @@ export class LLMService {
         // Test the connection
         await this.testConnection();
       } else if (this.settings.provider === 'gemini') {
-        if (!this.settings.apiKey) {
+        if (this.settings.apiKey === null) {
           console.warn('🤖 LLM Service: Gemini API key not provided');
           return false;
         }
-        
+        console.log(`Gemini Api Key: ${this.settings.apiKey}`)
         this.gemini = new GoogleGenerativeAI(this.settings.apiKey);
-        
         // Test the connection
         await this.testConnection();
       }
       
       this.isInitialized = true;
+    //   console.log("")
       console.log(`🤖 LLM Service initialized with provider: ${this.settings.provider}`);
       return true;
     } catch (error) {
@@ -79,9 +81,9 @@ export class LLMService {
         });
         return !!response.choices[0]?.message?.content;
       } else if (this.settings.provider === 'gemini' && this.gemini) {
-        const model = this.gemini.getGenerativeModel({ model: this.settings.model });
+        const model = this.gemini.getGenerativeModel({ model: 'gemini-1.5-flash' });
         const result = await model.generateContent('Hello');
-        const response = await result.response;
+        const response = result.response;
         return !!response.text();
       }
       return true;
@@ -92,17 +94,20 @@ export class LLMService {
   }
 
   async generateResponse(userMessage, context = {}) {
-    if (!this.isInitialized || !this.settings.enabled) {
+    if (!this.gemini || !this.settings.enabled) {
+      console.log(`Initialisation: ${this.isInitialized}`);
+      console.log(`Enabled: ${this.settings.enabled}`);
+      console.warn('🤖 LLM Service is not initialized or disabled');
       return null;
     }
 
     const userId = context.sender || 'unknown';
-    
+    console.log(`🤖 Generating response for user: ${userId}`);
     // Check rate limiting
-    if (!this.checkRateLimit(userId)) {
-      console.log(`🤖 Rate limit exceeded for user: ${userId}`);
-      return 'I apologize, but you have reached the hourly limit for AI responses. Please try again later.';
-    }
+    // if (!this.checkRateLimit(userId)) {
+    //   console.log(`🤖 Rate limit exceeded for user: ${userId}`);
+    //   return 'I apologize, but you have reached the hourly limit for AI responses. Please try again later.';
+    // }
 
     try {
       let response;
@@ -125,7 +130,7 @@ export class LLMService {
       }
 
       // Track successful request
-      this.incrementRequestCount(userId);
+    //   this.incrementRequestCount(userId);
       
       return response;
     } catch (error) {
@@ -173,7 +178,7 @@ export class LLMService {
 
     try {
       const model = this.gemini.getGenerativeModel({ 
-        model: this.settings.model || 'gemini-pro',
+        model: 'gemini-1.5-flash',
         generationConfig: {
           maxOutputTokens: this.settings.maxTokens,
           temperature: this.settings.temperature,
@@ -183,13 +188,8 @@ export class LLMService {
       // Build the prompt with system context
       const prompt = `${this.buildSystemPrompt(context)}\n\nUser: ${userMessage}\n\nAssistant:`;
 
-      const result = await Promise.race([
-        model.generateContent(prompt),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Request timeout')), this.settings.timeout)
-        )
-      ]);
-
+      const result = await model.generateContent(prompt);
+      console.log(result);
       const response = await result.response;
       return response.text()?.trim() || this.settings.fallbackMessage;
     } catch (error) {

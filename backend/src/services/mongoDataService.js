@@ -80,10 +80,53 @@ class MongoDataService {
         .limit(limit)
         .skip(offset)
         .lean();
-
+        // console.log(messages);
       return messages;
     } catch (error) {
       console.error(' Error loading messages:', error);
+      throw error;
+    }
+  }
+
+  // Alias for compatibility with existing code that expects getMessages
+  async getMessages(filters = {}) {
+    try {
+      const limit = filters.limit || 100;
+      const offset = filters.offset || 0;
+      
+      // Remove limit and offset from filters to pass clean filters to loadMessages
+      const { limit: _, offset: __, ...cleanFilters } = filters;
+      
+      const messages = await this.loadMessages(limit, offset, cleanFilters);
+      
+      // Transform to match expected format if needed
+      const result = messages.map(message => ({
+        id: message.messageId,
+        messageId: message.messageId,
+        sender: message.sender,
+        senderName: message.senderName,
+        recipient: message.recipient,
+        content: message.content,
+        type: message.type,
+        direction: message.direction,
+        status: message.status,
+        timestamp: message.timestamp,
+        hasMedia: message.hasMedia,
+        mediaPath: message.mediaPath,
+        mediaType: message.mediaType,
+        mediaName: message.mediaName,
+        isGroupMsg: message.isGroupMsg,
+        fromMe: message.fromMe,
+        chat: message.chat,
+        quotedMsg: message.quotedMsg,
+        metadata: message.metadata,
+        createdAt: message.createdAt,
+        updatedAt: message.updatedAt
+      }));
+    //   console.log(`messages: ${result}`)
+        return result;
+    } catch (error) {
+      console.error(' Error getting messages:', error);
       throw error;
     }
   }
@@ -116,6 +159,87 @@ class MongoDataService {
       return result.deletedCount > 0;
     } catch (error) {
       console.error(' Error deleting message:', error);
+      throw error;
+    }
+  }
+
+  // Additional message-related methods for full compatibility
+  async getMessagesByContact(contactId, limit = 100, offset = 0) {
+    try {
+      const query = {
+        $or: [
+          { sender: contactId },
+          { recipient: contactId }
+        ]
+      };
+
+      const messages = await Message.find(query)
+        .sort({ timestamp: -1 })
+        .limit(limit)
+        .skip(offset)
+        .lean();
+
+      return messages;
+    } catch (error) {
+      console.error(' Error getting messages by contact:', error);
+      throw error;
+    }
+  }
+
+  async getMessagesByChat(chatId, limit = 100, offset = 0) {
+    try {
+      const messages = await Message.find({ chat: chatId })
+        .sort({ timestamp: -1 })
+        .limit(limit)
+        .skip(offset)
+        .lean();
+
+      return messages;
+    } catch (error) {
+      console.error(' Error getting messages by chat:', error);
+      throw error;
+    }
+  }
+
+  async getMessageCount(filters = {}) {
+    try {
+      const query = {};
+      
+      // Apply same filters as in getMessages
+      if (filters.sender) query.sender = filters.sender;
+      if (filters.recipient) query.recipient = filters.recipient;
+      if (filters.direction) query.direction = filters.direction;
+      if (filters.type) query.type = filters.type;
+      if (filters.status) query.status = filters.status;
+      if (filters.dateFrom) query.timestamp = { ...query.timestamp, $gte: new Date(filters.dateFrom) };
+      if (filters.dateTo) query.timestamp = { ...query.timestamp, $lte: new Date(filters.dateTo) };
+      if (filters.chat) query.chat = filters.chat;
+
+      return await Message.countDocuments(query);
+    } catch (error) {
+      console.error(' Error getting message count:', error);
+      throw error;
+    }
+  }
+
+  async searchMessages(searchTerm, limit = 50, offset = 0) {
+    try {
+      const query = {
+        $or: [
+          { content: { $regex: searchTerm, $options: 'i' } },
+          { senderName: { $regex: searchTerm, $options: 'i' } }
+        ]
+      };
+
+      const messages = await Message.find(query)
+        .sort({ timestamp: -1 })
+        .limit(limit)
+        .skip(offset)
+        .lean();
+
+      return messages;
+    } catch (error) {
+      console.error(' Error searching messages:', error);
       throw error;
     }
   }
@@ -346,6 +470,39 @@ class MongoDataService {
       throw error;
     }
   }
+
+  // Auto-reply tracking method
+  async saveAutoReply(replyData) {
+    try {
+      const analytics = new Analytics({
+        date: new Date(replyData.timestamp || new Date()),
+        type: 'auto_reply',
+        data: {
+          sender: replyData.sender,
+          senderName: replyData.senderName,
+          message: replyData.message,
+          response: replyData.response,
+          responseType: replyData.responseType,
+          isGroup: replyData.isGroup,
+          isWorkingHours: replyData.isWorkingHours,
+          timestamp: replyData.timestamp
+        },
+        count: 1,
+        metadata: {
+          responseType: replyData.responseType,
+          isGroup: replyData.isGroup,
+          isWorkingHours: replyData.isWorkingHours
+        }
+      });
+
+      const savedAnalytics = await analytics.save();
+      console.log(`📊 Auto-reply analytics saved for: ${replyData.sender}`);
+      return savedAnalytics;
+    } catch (error) {
+      console.error(' Error saving auto-reply analytics:', error);
+      throw error;
+    }
+  }
   async saveSessionData(key, data, expiresAt = null) {
     try {
       const sessionData = await SessionData.findOneAndUpdate(
@@ -526,6 +683,9 @@ class MongoDataService {
           await this.saveAnalytics(analytics.type, analytics.data, analytics.date);
         }
       }
+    } else {
+      // For other data types like QR codes, store as session data
+      await this.saveSessionData(filename, data);
     }
   }
 
@@ -542,6 +702,24 @@ class MongoDataService {
     } catch (error) {
       console.error(` Error loading data for ${filename}:`, error);
       return defaultData;
+    }
+  }
+
+  // Generic data getter for compatibility
+  async getData(key, defaultValue = null) {
+    try {
+      // First try session data
+      const sessionData = await this.loadSessionData(key);
+      if (sessionData !== null) {
+        return sessionData;
+      }
+      
+      // Fallback to settings
+      const setting = await this.getSetting(key, defaultValue);
+      return setting;
+    } catch (error) {
+      console.error(` Error getting data for ${key}:`, error);
+      return defaultValue;
     }
   }
 }

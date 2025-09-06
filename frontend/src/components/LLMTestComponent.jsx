@@ -56,6 +56,7 @@ const LLMTestComponent = ({ disabled = false }) => {
       });
       
       setTestResult(response.data);
+      console.log('LLM Test Response:', response.data);
     } catch (error) {
       console.error('Error testing LLM:', error);
       setTestResult({

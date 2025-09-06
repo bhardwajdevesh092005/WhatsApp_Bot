@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// import { formatDateTime } from '../../../frontend/src/utils/helpers';
 
 // Message Schema
 const messageSchema = new mongoose.Schema({
@@ -28,7 +29,7 @@ const messageSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['text', 'image', 'audio', 'video', 'document', 'sticker', 'location', 'contact'],
+    enum: ['text', 'image', 'audio','chat', 'video', 'document', 'sticker', 'location', 'contact'],
     default: 'text'
   },
   direction: {
@@ -39,14 +40,14 @@ const messageSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'sent', 'delivered', 'read', 'failed'],
+    enum: ['pending', 'sent', 'delivered', 'read', 'failed','received'],
     default: 'pending',
     index: true
   },
   timestamp: {
-    type: Date,
-    default: Date.now,
-    index: true
+    type: String,
+    default: Date.now.toString(),
+    index: true     
   },
   hasMedia: {
     type: Boolean,
@@ -178,7 +179,6 @@ const analyticsSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['daily', 'hourly', 'contact', 'message_type', 'error'],
     required: true,
     index: true
   },

@@ -19,6 +19,7 @@ import {
   TablePagination,
   IconButton,
   Tooltip,
+  responsiveFontSizes,
 } from '@mui/material';
 import {
   Search,
@@ -53,6 +54,7 @@ const Messages = () => {
     try {
       const response = await apiService.getMessages();
       setMessages(response.data.data);
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
@@ -61,7 +63,7 @@ const Messages = () => {
   };
 
   const filterMessages = () => {
-    let filtered = [...messages];
+    let filtered = [...(messages||[])];
 
     // Search filter
     if (searchQuery) {

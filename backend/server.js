@@ -110,7 +110,7 @@ const initializeServices = async () => {
     
     console.log('All services initialized successfully');
     
-    // Make services available globally
+    // Make services avail  able globally
     app.locals.whatsappService = whatsappService;
     app.locals.socketService = socketService;
     app.locals.dataService = dataService;

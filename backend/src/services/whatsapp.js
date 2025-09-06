@@ -43,8 +43,8 @@ export class WhatsAppService {
       // Initialize with default settings if data service fails
       await this.llmService.initialize({
         enabled: false,
-        provider: 'openai',
-        model: 'gpt-3.5-turbo'
+        provider: 'gemini',
+        model: 'gemini-1.5-flash'
       });
     }
   }
@@ -165,8 +165,14 @@ export class WhatsAppService {
         
         // Process incoming message
         const messageData = await this.processIncomingMessage(message);
-        
-        // Save to data service
+        // console.log(message);
+      const ts = new Date(message.timestamp * 1000);
+      if (isNaN(ts.getTime())) {
+          console.error("❌ Invalid timestamp:", message.timestamp);
+        } else {  
+            message = {...message,timestamp: ts}
+            console.log(message.timestamp)
+      }        // Save to data service
         await this.dataService.saveMessage(messageData);
         
         // Emit to connected clients
@@ -206,6 +212,7 @@ export class WhatsAppService {
     try {
       console.log('Initializing WhatsApp client...');
       await this.client.initialize();
+      console.log(this.cli);
     } catch (error) {
       console.error(' Failed to initialize WhatsApp client:', error);
       throw error;
@@ -237,10 +244,15 @@ export class WhatsAppService {
       
       // Process sent message
       const messageData = await this.processSentMessage(sentMessage, to, message, options);
-      
+      const ts = new Date(message.timestamp * 1000);
+      if (isNaN(ts.getTime())) {
+        console.error("❌ Invalid timestamp:", message.timestamp);
+      } else {
+        message.timestamp = ts;
+      }
       // Save to data service
       await this.dataService.saveMessage(messageData);
-      
+      console.log(`Message sent successfully to ${to}`);
       // Emit to connected clients
       this.socketService.emit('message:sent', messageData);
       
@@ -310,39 +322,36 @@ export class WhatsAppService {
   }
 
   async handleAutoReply(message, messageData) {
-    const settings = await this.dataService.getSettings();
-    
-    if (!settings.autoReply || message.fromMe) {
+    let settings = await this.dataService.getSettings();
+    settings = {...settings,autoReply:true}
+    if (!settings.autoReply){
+        console.log('Auto-reply is disabled or message is from self');
       return;
     }
     
     // Check working hours
     const isWorkingHours = !settings.workingHours?.enabled || this.isWithinWorkingHours(settings.workingHours);
     
-    // Check if contact is allowed
-    if (settings.allowedContacts?.length > 0 && !settings.allowedContacts.includes(messageData.sender)) {
-      return;
-    }
-    
     // Check if contact is blocked
-    if (settings.blockedContacts?.includes(messageData.sender)) {
-      return;
-    }
+    // if (settings.blockedContacts?.includes(messageData.sender)) {
+    //   return;
+    // }
 
     try {
       let replyMessage = '';
+      console.log('Preparing to send auto-reply to:', messageData.sender);
       let responseType = 'default';
       
       // Check if LLM auto-reply is enabled
-      const llmSettings = settings.llm || {};
+      const llmSettings = this.llmService.settings || {};
       if (llmSettings.enabled && llmSettings.autoReply) {
         console.log('Generating LLM auto-reply for:', messageData.sender);
         
         const context = {
           sender: messageData.sender,
           senderName: messageData.senderName,
-          isGroup: message.isGroupMsg,
-          businessHours: isWorkingHours,
+        //   isGroup: message.isGroupMsg,
+        //   businessHours: isWorkingHours,
           messageContent: messageData.content
         };
         
@@ -359,6 +368,8 @@ export class WhatsAppService {
         }
       } else {
         // Use traditional auto-reply
+        console.log('Using default auto-reply for:', messageData.sender);
+        console.log(llmSettings);
         replyMessage = this.getDefaultAutoReplyMessage(settings, isWorkingHours);
         responseType = isWorkingHours ? 'default' : 'afterHours';
       }
@@ -704,6 +715,7 @@ export class WhatsAppService {
   async testLLMResponse(message, context = {}) {
     try {
       const response = await this.llmService.generateResponse(message, context);
+      console.log(response);
       return {
         success: true,
         response: response,

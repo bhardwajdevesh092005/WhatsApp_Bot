@@ -105,7 +105,7 @@ export class LLMController {
           error: 'Message is required for testing'
         });
       }
-      
+      console.log('💬 Testing LLM with message:', message);;
       const result = await whatsappService.testLLMResponse(message, context);
       
       res.json({
@@ -138,37 +138,10 @@ export class LLMController {
           id: 'gemini',
           name: 'Google Gemini',
           description: 'Google Gemini AI models (Free with API key)',
-          models: ['gemini-pro', 'gemini-pro-vision'],
+          models: ['gemini-1.5-flash'],
           requiresApiKey: true,
           baseURL: 'https://generativelanguage.googleapis.com/v1beta',
           documentation: 'https://ai.google.dev/docs'
-        },
-        {
-          id: 'openai',
-          name: 'OpenAI',
-          description: 'OpenAI GPT models (GPT-3.5, GPT-4)',
-          models: ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-turbo-preview'],
-          requiresApiKey: true,
-          baseURL: 'https://api.openai.com/v1',
-          documentation: 'https://platform.openai.com/docs'
-        },
-        {
-          id: 'ollama',
-          name: 'Ollama',
-          description: 'Local LLM hosting with Ollama',
-          models: ['llama2', 'codellama', 'mistral', 'neural-chat'],
-          requiresApiKey: false,
-          baseURL: 'http://localhost:11434',
-          documentation: 'https://github.com/ollama/ollama'
-        },
-        {
-          id: 'custom',
-          name: 'Custom Provider',
-          description: 'Custom LLM API endpoint',
-          models: ['custom-model'],
-          requiresApiKey: false,
-          baseURL: '',
-          documentation: 'Configure your custom endpoint'
         }
       ];
       
@@ -198,7 +171,7 @@ export class LLMController {
         enabled: true,
         autoReply: true,
         provider: 'gemini',
-        model: 'gemini-pro',
+        model: 'gemini-1.5-flash',
         apiKey: '',
         baseURL: 'https://generativelanguage.googleapis.com/v1beta',
         customEndpoint: '',

@@ -4,7 +4,7 @@ export class SocketService {
     this.connectedClients = new Map();
     this.rooms = new Set();
     
-    console.log(' Socket service initialized');
+    console.log('Socket service initialized');
   }
 
   // Handle new client connection

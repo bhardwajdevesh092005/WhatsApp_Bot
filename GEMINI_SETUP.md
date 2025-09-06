@@ -31,14 +31,14 @@ The system is already configured to use Gemini by default. You can:
 
 ### Recommended Settings for Gemini:
 - **Provider**: `gemini`
-- **Model**: `gemini-pro` (free tier)
+- **Model**: `gemini-1.5-flash` (free tier)
 - **Max Tokens**: `150` (for concise responses)
 - **Temperature**: `0.7` (balanced creativity)
 - **Rate Limit**: `60` requests/hour (adjust as needed)
 
 ### Available Models:
-- `gemini-pro`: Best for text generation (recommended)
-- `gemini-pro-vision`: For image understanding (requires special setup)
+- `gemini-1.5-flash`: Best for text generation (recommended)
+- `gemini-1.5-flash-vision`: For image understanding (requires special setup)
 
 ## 🎯 Features
 
@@ -69,7 +69,7 @@ The system is already configured to use Gemini by default. You can:
    - Ensure you haven't exceeded rate limits
 
 3. **"Model not found"**
-   - Use `gemini-pro` for text generation
+   - Use `gemini-1.5-flash` for text generation
    - Ensure model name is exactly correct
 
 ### Test Your Setup:

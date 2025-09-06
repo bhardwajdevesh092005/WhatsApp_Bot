@@ -167,7 +167,7 @@ export class DataService {
   getDefaultSettings() {
     return {
       botName: 'WhatsApp Bot',
-      autoReply: false,
+      autoReply: true,
       autoReplyMessage: 'Thanks for your message! We will get back to you soon.',
       afterHoursMessage: 'Thank you for your message. We are currently outside business hours. We will respond as soon as possible during our working hours.',
       webhookUrl: '',
@@ -190,11 +190,11 @@ export class DataService {
       },
       llm: {
         enabled: true,
-        autoReply: false,
-        provider: 'openai',
-        model: 'gpt-3.5-turbo',
-        apiKey: '',
-        baseURL: 'https://api.openai.com/v1',
+        autoReply: true,
+        provider: 'gemini',
+        model: 'gemini-1.5-flash',
+        // apiKey: '',
+        // baseURL: 'https://api.openai.com/v1',
         customEndpoint: '',
         maxTokens: 150,
         temperature: 0.7,

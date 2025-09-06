@@ -56,7 +56,7 @@ const LLMSettings = () => {
     enabled: false,
     autoReply: false,
     provider: 'gemini',
-    model: 'gemini-pro',
+    model: 'gemini-1.5-flash',
     apiKey: '',
     baseURL: 'https://api.openai.com/v1',
     customEndpoint: '',
