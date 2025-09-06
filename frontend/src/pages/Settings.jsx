@@ -37,6 +37,7 @@ import {
   Settings as SettingsIcon,
   Security,
   Notifications,
+  Schedule,
 } from '@mui/icons-material';
 import { apiService } from '../services/api';
 

@@ -63,10 +63,16 @@ const Layout = ({ children }) => {
           <List>
             {menuItems.map((item) => (
               <ListItem
-                button
                 key={item.text}
+                disablePadding
                 onClick={() => navigate(item.path)}
-                selected={location.pathname === item.path}
+                sx={{
+                  backgroundColor: location.pathname === item.path ? 'action.selected' : 'transparent',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
