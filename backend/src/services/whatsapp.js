@@ -73,30 +73,30 @@ export class WhatsAppService {
   }
 
   setupEventHandlers() {
-    // QR Code generation
-    this.client.on('qr', async (qr) => {
-      console.log('📱 QR Code received, scan with WhatsApp mobile app');
-      try {
-        this.qrCode = await qrcode.toDataURL(qr);
-        this.status = 'qr_code';
+  //   // QR Code generation
+  //   this.client.on('qr', async (qr) => {
+  //     console.log('📱 QR Code received, scan with WhatsApp mobile app');
+  //     try {
+  //       this.qrCode = await qrcode.toDataURL(qr);
+  //       this.status = 'qr_code';
         
-        // Emit QR code to connected clients
-        this.socketService.emit('bot:qr', {
-          qrCode: this.qrCode,
-          status: this.status,
-          message: 'Scan QR code with WhatsApp mobile app'
-        });
+  //       // Emit QR code to connected clients
+  //       this.socketService.emit('bot:qr', {
+  //         qrCode: this.qrCode,
+  //         status: this.status,
+  //         message: 'Scan QR code with WhatsApp mobile app'
+  //       });
         
-        // Save QR code for API access
-        await this.dataService.saveData('qr_code', {
-          qrCode: this.qrCode,
-          timestamp: new Date().toISOString()
-        });
+  //       // Save QR code for API access
+  //       await this.dataService.saveData('qr_code', {
+  //         qrCode: this.qrCode,
+  //         timestamp: new Date().toISOString()
+  //       });
         
-      } catch (error) {
-        console.error(' Error generating QR code:', error);
-      }
-    });
+  //     } catch (error) {
+  //       console.error(' Error generating QR code:', error);
+  //     }
+  //   });
 
     // Client ready
     this.client.on('ready', async () => {
